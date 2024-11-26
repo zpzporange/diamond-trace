@@ -9,22 +9,42 @@
 . scripts/envVar.sh
 . scripts/configUpdate.sh
 
-# Function to create anchor peer update transaction
+# NOTE: this must be run in a CLI container since it requires jq and configtxlator
 createAnchorPeerUpdate() {
   infoln "Fetching channel config for channel $CHANNEL_NAME"
   fetchChannelConfig $ORG $CHANNEL_NAME ${CORE_PEER_LOCALMSPID}config.json
 
   infoln "Generating anchor peer update transaction for Org${ORG} on channel $CHANNEL_NAME"
 
-  HOST="peer0.$ORG"
-  PORT=$P0PORT
+  case $ORG in
+  MiningCompanyMSP)
+    HOST="peer0.miningcompany.example.com"
+    PORT=8051
+    ;;
+  CuttingCompanyMSP)
+    HOST="peer0.cuttingcompany.example.com"
+    PORT=9051
+    ;;
+  GradingLabMSP)
+    HOST="peer0.gradinglab.example.com"
+    PORT=10051
+    ;;
+  JewelryMakerMSP)
+    HOST="peer0.jewelrymaker.example.com"
+    PORT=11051
+    ;;
+  *)
+    errorln "Unknown organization: $ORG"
+    return 1
+    ;;
+  esac
 
   set -x
-  # Modify the configuration to append the anchor peer 
-  jq '.channel_group.groups.Application.groups.'${CORE_PEER_LOCALMSPID}'.values += {"AnchorPeers":{"mod_policy": "Admins","value":{"anchor_peers": [{"host": "'$HOST'","port": '$PORT'}]},"version": "0"}}' ${CORE_PEER_LOCALMSPID}config.json > ${CORE_PEER_LOCALMSPID}modified_config.json
+  # Modify the configuration to append the anchor peer
+  jq '.channel_group.groups.Application.groups.'${CORE_PEER_LOCALMSPID}'.values += {"AnchorPeers":{"mod_policy": "Admins","value":{"anchor_peers": [{"host": "'$HOST'","port": '$PORT'}]},"version": "0"}}' ${CORE_PEER_LOCALMSPID}config.json >${CORE_PEER_LOCALMSPID}modified_config.json
   { set +x; } 2>/dev/null
 
-  # Compute a config update, based on the differences between 
+  # Compute a config update, based on the differences between
   # {orgmsp}config.json and {orgmsp}modified_config.json, write
   # it as a transaction to {orgmsp}anchors.tx
   createConfigUpdate ${CHANNEL_NAME} ${CORE_PEER_LOCALMSPID}config.json ${CORE_PEER_LOCALMSPID}modified_config.json ${CORE_PEER_LOCALMSPID}anchors.tx
@@ -47,7 +67,7 @@ CHANNEL_NAME=$2
 setGlobalsCLI $ORG
 
 # Fetch and modify the channel configuration
-createAnchorPeerUpdate 
+createAnchorPeerUpdate
 
 # Update the anchor peer on the channel
 updateAnchorPeer
