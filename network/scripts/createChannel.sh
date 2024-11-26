@@ -4,7 +4,6 @@
 . scripts/envVar.sh
 . scripts/utils.sh
 
-
 CHANNEL_NAME="$1"
 DELAY="$2"
 MAX_RETRY="$3"
@@ -29,7 +28,7 @@ if [ ! -d "channel-artifacts" ]; then
 fi
 
 createChannelGenesisBlock() {
-  setGlobals 1
+  setGlobals MiningCompanyMSP
 	which configtxgen
 	if [ "$?" -ne 0 ]; then
 		fatalln "configtxgen tool not found."
@@ -97,6 +96,41 @@ setAnchorPeer() {
   ${CONTAINER_CLI} exec cli ./scripts/setAnchorPeer.sh $ORG $CHANNEL_NAME 
 }
 
+# Function to set environment variables for a given organization
+setGlobals() {
+  ORG=$1
+  DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+  ORDERER_CA=${DIR}/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+
+  if [[ ${ORG,,} == "miningcompanymsp" ]]; then
+    CORE_PEER_LOCALMSPID=MiningCompanyMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp
+    CORE_PEER_ADDRESS=localhost:8051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "cuttingcompanymsp" ]]; then
+    CORE_PEER_LOCALMSPID=CuttingCompanyMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/msp
+    CORE_PEER_ADDRESS=localhost:9051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "gradinglabmsp" ]]; then
+    CORE_PEER_LOCALMSPID=GradingLabMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/msp
+    CORE_PEER_ADDRESS=localhost:10051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "jewelrymakermsp" ]]; then
+    CORE_PEER_LOCALMSPID=JewelryMakerMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/msp
+    CORE_PEER_ADDRESS=localhost:11051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
+
+  else
+    echo "Unknown \"$ORG\", please choose MiningCompanyMSP, CuttingCompanyMSP, GradingLabMSP, or JewelryMakerMSP"
+    exit 1
+  fi
+}
 
 ## User attempts to use BFT orderer in Fabric network with CA
 if [ $BFT -eq 1 ] && [ -d "organizations/fabric-ca/ordererOrg/msp" ]; then
@@ -121,15 +155,23 @@ createChannel $BFT
 successln "Channel '$CHANNEL_NAME' created"
 
 ## Join all the peers to the channel
-infoln "Joining org1 peer to the channel..."
-joinChannel 1
-infoln "Joining org2 peer to the channel..."
-joinChannel 2
+infoln "Joining MiningCompany peer to the channel..."
+joinChannel MiningCompanyMSP
+infoln "Joining CuttingCompany peer to the channel..."
+joinChannel CuttingCompanyMSP
+infoln "Joining GradingLab peer to the channel..."
+joinChannel GradingLabMSP
+infoln "Joining JewelryMaker peer to the channel..."
+joinChannel JewelryMakerMSP
 
 ## Set the anchor peers for each org in the channel
-infoln "Setting anchor peer for org1..."
-setAnchorPeer 1
-infoln "Setting anchor peer for org2..."
-setAnchorPeer 2
+infoln "Setting anchor peer for MiningCompany..."
+setAnchorPeer MiningCompanyMSP
+infoln "Setting anchor peer for CuttingCompany..."
+setAnchorPeer CuttingCompanyMSP
+infoln "Setting anchor peer for GradingLab..."
+setAnchorPeer GradingLabMSP
+infoln "Setting anchor peer for JewelryMaker..."
+setAnchorPeer JewelryMakerMSP
 
 successln "Channel '$CHANNEL_NAME' joined"

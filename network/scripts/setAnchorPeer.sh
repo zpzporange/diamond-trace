@@ -9,26 +9,15 @@
 . scripts/envVar.sh
 . scripts/configUpdate.sh
 
-
-# NOTE: this must be run in a CLI container since it requires jq and configtxlator 
+# Function to create anchor peer update transaction
 createAnchorPeerUpdate() {
   infoln "Fetching channel config for channel $CHANNEL_NAME"
   fetchChannelConfig $ORG $CHANNEL_NAME ${CORE_PEER_LOCALMSPID}config.json
 
   infoln "Generating anchor peer update transaction for Org${ORG} on channel $CHANNEL_NAME"
 
-  if [ $ORG -eq 1 ]; then
-    HOST="peer0.org1.example.com"
-    PORT=7051
-  elif [ $ORG -eq 2 ]; then
-    HOST="peer0.org2.example.com"
-    PORT=9051
-  elif [ $ORG -eq 3 ]; then
-    HOST="peer0.org3.example.com"
-    PORT=11051
-  else
-    errorln "Org${ORG} unknown"
-  fi
+  HOST="peer0.$ORG"
+  PORT=$P0PORT
 
   set -x
   # Modify the configuration to append the anchor peer 
@@ -41,6 +30,7 @@ createAnchorPeerUpdate() {
   createConfigUpdate ${CHANNEL_NAME} ${CORE_PEER_LOCALMSPID}config.json ${CORE_PEER_LOCALMSPID}modified_config.json ${CORE_PEER_LOCALMSPID}anchors.tx
 }
 
+# Function to update the anchor peer on the channel
 updateAnchorPeer() {
   peer channel update -o orderer.example.com:7050 --ordererTLSHostnameOverride orderer.example.com -c $CHANNEL_NAME -f ${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile "$ORDERER_CA" >&log.txt
   res=$?
@@ -49,11 +39,15 @@ updateAnchorPeer() {
   successln "Anchor peer set for org '$CORE_PEER_LOCALMSPID' on channel '$CHANNEL_NAME'"
 }
 
+# Main script execution
 ORG=$1
 CHANNEL_NAME=$2
 
+# Set global environment variables for the organization
 setGlobalsCLI $ORG
 
+# Fetch and modify the channel configuration
 createAnchorPeerUpdate 
 
-updateAnchorPeer 
+# Update the anchor peer on the channel
+updateAnchorPeer

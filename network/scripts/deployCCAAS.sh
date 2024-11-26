@@ -47,7 +47,7 @@ println "- VERBOSE: ${C_GREEN}${VERBOSE}${C_RESET}"
 
 FABRIC_CFG_PATH=$PWD/config/
 
-#User has not provided a name
+# User has not provided a name
 if [ -z "$CC_NAME" ] || [ "$CC_NAME" = "NA" ]; then
   fatalln "No chaincode name was provided. Valid call example: ./network.sh deployCCAS -ccn basic -ccp ../asset-transfer-basic/chaincode-go "
 
@@ -59,8 +59,6 @@ elif [ -z "$CC_SRC_PATH" ] || [ "$CC_SRC_PATH" = "NA" ]; then
 elif [ ! -d "$CC_SRC_PATH" ]; then
   fatalln "Path to chaincode does not exist. Please provide different path."
 fi
-
-
 
 if [ "$CC_END_POLICY" = "NA" ]; then
   CC_END_POLICY=""
@@ -124,9 +122,9 @@ buildDockerImages() {
     { set +x; } 2>/dev/null
     cat log.txt
     verifyResult $res "Docker build of chaincode-as-a-service container failed"
-    successln "Docker image '${CC_NAME}_ccaas_image:latest' built succesfully"
+    successln "Docker image '${CC_NAME}_ccaas_image:latest' built successfully"
   else
-    infoln "Not building docker image; this the command we would have run"
+    infoln "Not building docker image; this is the command we would have run"
     infoln "   ${CONTAINER_CLI} build -f $CC_SRC_PATH/Dockerfile -t ${CC_NAME}_ccaas_image:latest --build-arg CC_SERVER_PORT=9999 $CC_SRC_PATH"
   fi
 }
@@ -136,13 +134,25 @@ startDockerContainer() {
   if [ "$CCAAS_DOCKER_RUN" = "true" ]; then
     infoln "Starting the Chaincode-as-a-Service docker container..."
     set -x
-    ${CONTAINER_CLI} run --rm -d --name peer0org1_${CC_NAME}_ccaas  \
+    ${CONTAINER_CLI} run --rm -d --name peer0miningcompany_${CC_NAME}_ccaas  \
                   --network fabric_test \
                   -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
                   -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
                     ${CC_NAME}_ccaas_image:latest
 
-    ${CONTAINER_CLI} run  --rm -d --name peer0org2_${CC_NAME}_ccaas \
+    ${CONTAINER_CLI} run --rm -d --name peer0cuttingcompany_${CC_NAME}_ccaas  \
+                  --network fabric_test \
+                  -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
+                  -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
+                    ${CC_NAME}_ccaas_image:latest
+
+    ${CONTAINER_CLI} run --rm -d --name peer0gradinglab_${CC_NAME}_ccaas  \
+                  --network fabric_test \
+                  -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
+                  -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
+                    ${CC_NAME}_ccaas_image:latest
+
+    ${CONTAINER_CLI} run --rm -d --name peer0jewelrymaker_${CC_NAME}_ccaas  \
                   --network fabric_test \
                   -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
                   -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
@@ -151,21 +161,69 @@ startDockerContainer() {
     { set +x; } 2>/dev/null
     cat log.txt
     verifyResult $res "Failed to start the container container '${CC_NAME}_ccaas_image:latest' "
-    successln "Docker container started succesfully '${CC_NAME}_ccaas_image:latest'" 
+    successln "Docker container started successfully '${CC_NAME}_ccaas_image:latest'" 
   else
-  
     infoln "Not starting docker containers; these are the commands we would have run"
-    infoln "    ${CONTAINER_CLI} run --rm -d --name peer0org1_${CC_NAME}_ccaas  \
+    infoln "    ${CONTAINER_CLI} run --rm -d --name peer0miningcompany_${CC_NAME}_ccaas  \
                   --network fabric_test \
                   -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
                   -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
                     ${CC_NAME}_ccaas_image:latest"
-    infoln "    ${CONTAINER_CLI} run --rm -d --name peer0org2_${CC_NAME}_ccaas  \
+    infoln "    ${CONTAINER_CLI} run --rm -d --name peer0cuttingcompany_${CC_NAME}_ccaas  \
                   --network fabric_test \
                   -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
                   -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
                     ${CC_NAME}_ccaas_image:latest"
+    infoln "    ${CONTAINER_CLI} run --rm -d --name peer0gradinglab_${CC_NAME}_ccaas  \
+                  --network fabric_test \
+                  -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
+                  -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
+                    ${CC_NAME}_ccaas_image:latest"
+    infoln "    ${CONTAINER_CLI} run --rm -d --name peer0jewelrymaker_${CC_NAME}_ccaas  \
+                  --network fabric_test \
+                  -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
+                  -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
+                    ${CC_NAME}_ccaas_image:latest"
+  fi
+}
 
+## Function to set environment variables for a given organization
+setGlobals() {
+  ORG=$1
+  DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+  ORDERER_CA=${DIR}/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+
+  if [[ ${ORG,,} == "miningcompanymsp" ]]; then
+    CORE_PEER_LOCALMSPID=MiningCompanyMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp
+    CORE_PEER_ADDRESS=localhost:8051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
+    PEER0_ORG1_CA=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "cuttingcompanymsp" ]]; then
+    CORE_PEER_LOCALMSPID=CuttingCompanyMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/msp
+    CORE_PEER_ADDRESS=localhost:9051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
+    PEER0_ORG2_CA=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "gradinglabmsp" ]]; then
+    CORE_PEER_LOCALMSPID=GradingLabMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/msp
+    CORE_PEER_ADDRESS=localhost:10051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
+    PEER0_ORG3_CA=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "jewelrymakermsp" ]]; then
+    CORE_PEER_LOCALMSPID=JewelryMakerMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/msp
+    CORE_PEER_ADDRESS=localhost:11051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
+    PEER0_ORG4_CA=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
+
+  else
+    echo "Unknown \"$ORG\", please choose MiningCompanyMSP, CuttingCompanyMSP, GradingLabMSP, or JewelryMakerMSP"
+    exit 1
   fi
 }
 
@@ -175,39 +233,45 @@ buildDockerImages
 ## package the chaincode
 packageChaincode
 
-## Install chaincode on peer0.org1 and peer0.org2
-infoln "Installing chaincode on peer0.org1..."
-installChaincode 1
-infoln "Install chaincode on peer0.org2..."
-installChaincode 2
+## Install chaincode on peer0.miningcompany, peer0.cuttingcompany, peer0.gradinglab, and peer0.jewelrymaker
+infoln "Installing chaincode on peer0.miningcompany..."
+installChaincode MiningCompanyMSP
+infoln "Installing chaincode on peer0.cuttingcompany..."
+installChaincode CuttingCompanyMSP
+infoln "Installing chaincode on peer0.gradinglab..."
+installChaincode GradingLabMSP
+infoln "Installing chaincode on peer0.jewelrymaker..."
+installChaincode JewelryMakerMSP
 
 resolveSequence
 
 ## query whether the chaincode is installed
-queryInstalled 1
+queryInstalled MiningCompanyMSP
+queryInstalled CuttingCompanyMSP
+queryInstalled GradingLabMSP
+queryInstalled JewelryMakerMSP
 
-## approve the definition for org1
-approveForMyOrg 1
-
-## check whether the chaincode definition is ready to be committed
-## expect org1 to have approved and org2 not to
-checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": false"
-checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": false"
-
-## now approve also for org2
-approveForMyOrg 2
+## approve the definition for each org
+approveForMyOrg MiningCompanyMSP
+approveForMyOrg CuttingCompanyMSP
+approveForMyOrg GradingLabMSP
+approveForMyOrg JewelryMakerMSP
 
 ## check whether the chaincode definition is ready to be committed
-## expect them both to have approved
-checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": true"
-checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": true"
+## expect all orgs to have approved
+checkCommitReadiness MiningCompanyMSP "\"MiningCompanyMSP\": true" "\"CuttingCompanyMSP\": true" "\"GradingLabMSP\": true" "\"JewelryMakerMSP\": true"
+checkCommitReadiness CuttingCompanyMSP "\"MiningCompanyMSP\": true" "\"CuttingCompanyMSP\": true" "\"GradingLabMSP\": true" "\"JewelryMakerMSP\": true"
+checkCommitReadiness GradingLabMSP "\"MiningCompanyMSP\": true" "\"CuttingCompanyMSP\": true" "\"GradingLabMSP\": true" "\"JewelryMakerMSP\": true"
+checkCommitReadiness JewelryMakerMSP "\"MiningCompanyMSP\": true" "\"CuttingCompanyMSP\": true" "\"GradingLabMSP\": true" "\"JewelryMakerMSP\": true"
 
-## now that we know for sure both orgs have approved, commit the definition
-commitChaincodeDefinition 1 2
+## now that we know for sure all orgs have approved, commit the definition
+commitChaincodeDefinition MiningCompanyMSP CuttingCompanyMSP GradingLabMSP JewelryMakerMSP
 
-## query on both orgs to see that the definition committed successfully
-queryCommitted 1
-queryCommitted 2
+## query on all orgs to see that the definition committed successfully
+queryCommitted MiningCompanyMSP
+queryCommitted CuttingCompanyMSP
+queryCommitted GradingLabMSP
+queryCommitted JewelryMakerMSP
 
 # start the container
 startDockerContainer
@@ -217,7 +281,7 @@ startDockerContainer
 if [ "$CC_INIT_FCN" = "NA" ]; then
   infoln "Chaincode initialization is not required"
 else
-  chaincodeInvokeInit 1 2
+  chaincodeInvokeInit MiningCompanyMSP CuttingCompanyMSP GradingLabMSP JewelryMakerMSP
 fi
 
 exit 0

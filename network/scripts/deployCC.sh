@@ -65,7 +65,47 @@ function checkPrereqs() {
   fi
 }
 
-#check for prerequisites
+## Function to set environment variables for a given organization
+setGlobals() {
+  ORG=$1
+  DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+  ORDERER_CA=${DIR}/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+
+  if [[ ${ORG,,} == "miningcompanymsp" ]]; then
+    CORE_PEER_LOCALMSPID=MiningCompanyMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp
+    CORE_PEER_ADDRESS=localhost:8051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
+    PEER0_ORG1_CA=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "cuttingcompanymsp" ]]; then
+    CORE_PEER_LOCALMSPID=CuttingCompanyMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/msp
+    CORE_PEER_ADDRESS=localhost:9051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
+    PEER0_ORG2_CA=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "gradinglabmsp" ]]; then
+    CORE_PEER_LOCALMSPID=GradingLabMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/msp
+    CORE_PEER_ADDRESS=localhost:10051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
+    PEER0_ORG3_CA=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "jewelrymakermsp" ]]; then
+    CORE_PEER_LOCALMSPID=JewelryMakerMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/msp
+    CORE_PEER_ADDRESS=localhost:11051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
+    PEER0_ORG4_CA=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
+
+  else
+    echo "Unknown \"$ORG\", please choose MiningCompanyMSP, CuttingCompanyMSP, GradingLabMSP, or JewelryMakerMSP"
+    exit 1
+  fi
+}
+
+# check for prerequisites
 checkPrereqs
 
 ## package the chaincode
@@ -74,45 +114,51 @@ checkPrereqs
 PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CC_NAME}.tar.gz)
 
 ## Install chaincode on peer0.org1 and peer0.org2
-infoln "Installing chaincode on peer0.org1..."
-installChaincode 1
-infoln "Install chaincode on peer0.org2..."
-installChaincode 2
+infoln "Installing chaincode on peer0.miningcompanymsp..."
+installChaincode MiningCompanyMSP
+infoln "Installing chaincode on peer0.cuttingcompanymsp..."
+installChaincode CuttingCompanyMSP
+infoln "Installing chaincode on peer0.gradinglabmsp..."
+installChaincode GradingLabMSP
+infoln "Installing chaincode on peer0.jewelrymakermsp..."
+installChaincode JewelryMakerMSP
 
 resolveSequence
 
 ## query whether the chaincode is installed
-queryInstalled 1
+queryInstalled MiningCompanyMSP
+queryInstalled CuttingCompanyMSP
+queryInstalled GradingLabMSP
+queryInstalled JewelryMakerMSP
 
-## approve the definition for org1
-approveForMyOrg 1
-
-## check whether the chaincode definition is ready to be committed
-## expect org1 to have approved and org2 not to
-checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": false"
-checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": false"
-
-## now approve also for org2
-approveForMyOrg 2
+## approve the definition for each org
+approveForMyOrg MiningCompanyMSP
+approveForMyOrg CuttingCompanyMSP
+approveForMyOrg GradingLabMSP
+approveForMyOrg JewelryMakerMSP
 
 ## check whether the chaincode definition is ready to be committed
-## expect them both to have approved
-checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": true"
-checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": true"
+## expect all orgs to have approved
+checkCommitReadiness MiningCompanyMSP "\"MiningCompanyMSP\": true" "\"CuttingCompanyMSP\": true" "\"GradingLabMSP\": true" "\"JewelryMakerMSP\": true"
+checkCommitReadiness CuttingCompanyMSP "\"MiningCompanyMSP\": true" "\"CuttingCompanyMSP\": true" "\"GradingLabMSP\": true" "\"JewelryMakerMSP\": true"
+checkCommitReadiness GradingLabMSP "\"MiningCompanyMSP\": true" "\"CuttingCompanyMSP\": true" "\"GradingLabMSP\": true" "\"JewelryMakerMSP\": true"
+checkCommitReadiness JewelryMakerMSP "\"MiningCompanyMSP\": true" "\"CuttingCompanyMSP\": true" "\"GradingLabMSP\": true" "\"JewelryMakerMSP\": true"
 
-## now that we know for sure both orgs have approved, commit the definition
-commitChaincodeDefinition 1 2
+## now that we know for sure all orgs have approved, commit the definition
+commitChaincodeDefinition MiningCompanyMSP CuttingCompanyMSP GradingLabMSP JewelryMakerMSP
 
-## query on both orgs to see that the definition committed successfully
-queryCommitted 1
-queryCommitted 2
+## query on all orgs to see that the definition committed successfully
+queryCommitted MiningCompanyMSP
+queryCommitted CuttingCompanyMSP
+queryCommitted GradingLabMSP
+queryCommitted JewelryMakerMSP
 
 ## Invoke the chaincode - this does require that the chaincode have the 'initLedger'
 ## method defined
 if [ "$CC_INIT_FCN" = "NA" ]; then
   infoln "Chaincode initialization is not required"
 else
-  chaincodeInvokeInit 1 2
+  chaincodeInvokeInit MiningCompanyMSP CuttingCompanyMSP GradingLabMSP JewelryMakerMSP
 fi
 
 exit 0

@@ -87,7 +87,7 @@ function commitChaincodeDefinition() {
   res=$?
   { set +x; } 2>/dev/null
   cat log.txt
-  verifyResult $res "Chaincode definition commit failed on peer0.org${ORG} on channel '$CHANNEL_NAME' failed"
+  verifyResult $res "Chaincode definition commit failed on channel '$CHANNEL_NAME' failed"
   successln "Chaincode definition committed on channel '$CHANNEL_NAME'"
 }
 
@@ -176,7 +176,7 @@ function chaincodeQuery() {
 
 function resolveSequence() {
 
-  #if the sequence is not "auto", then use the provided sequence
+  # if the sequence is not "auto", then use the provided sequence
   if [[ "${CC_SEQUENCE}" != "auto" ]]; then
     return 0
   fi
@@ -226,14 +226,11 @@ function resolveSequence() {
 #. scripts/envVar.sh
 
 queryInstalledOnPeer() {
-
   local rc=1
   local COUNTER=1
   # continue to poll
   # we either get a successful response, or reach MAX RETRY
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
-    #sleep $DELAY
-    #infoln "Attempting to list on peer0.org${ORG}, Retry after $DELAY seconds."
     peer lifecycle chaincode queryinstalled >&log.txt
     res=$?
     let rc=$res
@@ -249,8 +246,6 @@ queryCommittedOnChannel() {
   # continue to poll
   # we either get a successful response, or reach MAX RETRY
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
-    #sleep $DELAY
-    #infoln "Attempting to list on peer0.org${ORG}, Retry after $DELAY seconds."
     peer lifecycle chaincode querycommitted -C $CHANNEL >&log.txt
     res=$?
     let rc=$res
@@ -260,12 +255,9 @@ queryCommittedOnChannel() {
   if test $rc -ne 0; then
     fatalln "After $MAX_RETRY attempts, Failed to retrieve committed chaincode!"
   fi
-
 }
 
-## Function to list chaincodes installed on the peer and committed chaincode visible to the org
 listAllCommitted() {
-
   local rc=1
   local COUNTER=1
   # continue to poll
@@ -284,7 +276,6 @@ listAllCommitted() {
   else
     fatalln "After $MAX_RETRY attempts, Failed to retrieve committed chaincode!"
   fi
-
 }
 
 chaincodeInvoke() {
@@ -293,7 +284,8 @@ chaincodeInvoke() {
   CC_NAME=$3
   CC_INVOKE_CONSTRUCTOR=$4
   
-  infoln "Invoking on peer0.org${ORG} on channel '$CHANNEL_NAME'..."
+  infoln "Invoking on peer0.org${ORG} on channel '$CHANNEL'..."
+  setGlobals $ORG
   local rc=1
   local COUNTER=1
   # continue to poll
@@ -302,7 +294,7 @@ chaincodeInvoke() {
     sleep $DELAY
     infoln "Attempting to Invoke on peer0.org${ORG}, Retry after $DELAY seconds."
     set -x
-    peer chaincode invoke -o localhost:7050 -C $CHANNEL_NAME -n ${CC_NAME} -c ${CC_INVOKE_CONSTRUCTOR} --tls --cafile $ORDERER_CA  --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG1_CA --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA  >&log.txt
+    peer chaincode invoke -o localhost:7050 -C $CHANNEL -n ${CC_NAME} -c ${CC_INVOKE_CONSTRUCTOR} --tls --cafile $ORDERER_CA  --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_ORG1_CA --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA  --peerAddresses localhost:10051 --tlsRootCertFiles $PEER0_ORG3_CA --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_ORG4_CA  >&log.txt
     res=$?
     { set +x; } 2>/dev/null
     let rc=$res
@@ -310,7 +302,7 @@ chaincodeInvoke() {
   done
   cat log.txt
   if test $rc -eq 0; then
-    successln "Invoke successful on peer0.org${ORG} on channel '$CHANNEL_NAME'"
+    successln "Invoke successful on peer0.org${ORG} on channel '$CHANNEL'"
   else
     fatalln "After $MAX_RETRY attempts, Invoke result on peer0.org${ORG} is INVALID!"
   fi
@@ -322,7 +314,8 @@ chaincodeQuery() {
   CC_NAME=$3
   CC_QUERY_CONSTRUCTOR=$4
 
-  infoln "Querying on peer0.org${ORG} on channel '$CHANNEL_NAME'..."
+  infoln "Querying on peer0.org${ORG} on channel '$CHANNEL'..."
+  setGlobals $ORG
   local rc=1
   local COUNTER=1
   # continue to poll
@@ -331,7 +324,7 @@ chaincodeQuery() {
     sleep $DELAY
     infoln "Attempting to Query peer0.org${ORG}, Retry after $DELAY seconds."
     set -x
-    peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c ${CC_QUERY_CONSTRUCTOR} >&log.txt
+    peer chaincode query -C $CHANNEL -n ${CC_NAME} -c ${CC_QUERY_CONSTRUCTOR} >&log.txt
     res=$?
     { set +x; } 2>/dev/null
     let rc=$res
@@ -339,8 +332,48 @@ chaincodeQuery() {
   done
   cat log.txt
   if test $rc -eq 0; then
-    successln "Query successful on peer0.org${ORG} on channel '$CHANNEL_NAME'"
+    successln "Query successful on peer0.org${ORG} on channel '$CHANNEL'"
   else
     fatalln "After $MAX_RETRY attempts, Query result on peer0.org${ORG} is INVALID!"
+  fi
+}
+
+## Function to set environment variables for a given organization
+setGlobals() {
+  ORG=$1
+  DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+  ORDERER_CA=${DIR}/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+
+  if [[ ${ORG,,} == "miningcompanymsp" ]]; then
+    CORE_PEER_LOCALMSPID=MiningCompanyMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp
+    CORE_PEER_ADDRESS=localhost:8051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
+    PEER0_ORG1_CA=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "cuttingcompanymsp" ]]; then
+    CORE_PEER_LOCALMSPID=CuttingCompanyMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/msp
+    CORE_PEER_ADDRESS=localhost:9051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
+    PEER0_ORG2_CA=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "gradinglabmsp" ]]; then
+    CORE_PEER_LOCALMSPID=GradingLabMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/msp
+    CORE_PEER_ADDRESS=localhost:10051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
+    PEER0_ORG3_CA=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
+
+  elif [[ ${ORG,,} == "jewelrymakermsp" ]]; then
+    CORE_PEER_LOCALMSPID=JewelryMakerMSP
+    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/msp
+    CORE_PEER_ADDRESS=localhost:11051
+    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
+    PEER0_ORG4_CA=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
+
+  else
+    echo "Unknown \"$ORG\", please choose MiningCompanyMSP, CuttingCompanyMSP, GradingLabMSP, or JewelryMakerMSP"
+    exit 1
   fi
 }
