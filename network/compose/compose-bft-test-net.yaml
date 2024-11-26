@@ -95,7 +95,7 @@ services:
     ports:
       - 7052:7052
       - 7055:7055
-      - 9446:9446
+      - 9448:9448
     networks:
       - test
 
@@ -137,7 +137,7 @@ services:
     ports:
       - 7056:7056
       - 7057:7057
-      - 9447:9447
+      - 9449:9449
     networks:
       - test
 
@@ -179,15 +179,23 @@ services:
     ports:
       - 7058:7058
       - 7059:7059
-      - 9448:9448
+      - 9450:9450
     networks:
       - test
 
   peer0.miningcompany.example.com:
+    container_name: peer0.miningcompany.example.com
     image: hyperledger/fabric-peer:latest
     environment:
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_LOGGING_LEVEL=INFO
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
       - CORE_PEER_ID=peer0.miningcompany.example.com
       - CORE_PEER_ADDRESS=peer0.miningcompany.example.com:8051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
@@ -196,14 +204,16 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.miningcompany.example.com:8051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.miningcompany.example.com:8051
       - CORE_PEER_LOCALMSPID=MiningCompanyMSP
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_OPERATIONS_LISTENADDRESS=peer0.miningcompany.example.com:9444
+      - CORE_METRICS_PROVIDER=prometheus
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer0miningcompany"}
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+    working_dir: /root
     command: peer node start
     volumes:
-      - /var/run/:/host/var/run/
-      - ./crypto-config/peerOrganizations/miningcompany.example.com/peers/peer0.miningcompany.example.com/msp:/etc/hyperledger/msp/peer
-      - ./crypto-config/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp:/etc/hyperledger/msp/user
-      - ./crypto-config/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/tls:/etc/hyperledger/msp/tls
+      - ../organizations/peerOrganizations/miningcompany.example.com/peers/peer0.miningcompany.example.com:/etc/hyperledger/fabric
+      - peer0.miningcompany.example.com:/var/hyperledger/production
     ports:
       - 8051:8051
       - 9444:9444
@@ -211,10 +221,18 @@ services:
       - test
 
   peer0.cuttingcompany.example.com:
+    container_name: peer0.cuttingcompany.example.com
     image: hyperledger/fabric-peer:latest
     environment:
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_LOGGING_LEVEL=INFO
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
       - CORE_PEER_ID=peer0.cuttingcompany.example.com
       - CORE_PEER_ADDRESS=peer0.cuttingcompany.example.com:9051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
@@ -223,14 +241,16 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.cuttingcompany.example.com:9051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.cuttingcompany.example.com:9051
       - CORE_PEER_LOCALMSPID=CuttingCompanyMSP
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_OPERATIONS_LISTENADDRESS=peer0.cuttingcompany.example.com:9445
+      - CORE_METRICS_PROVIDER=prometheus
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer0cuttingcompany"}
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+    working_dir: /root
     command: peer node start
     volumes:
-      - /var/run/:/host/var/run/
-      - ./crypto-config/peerOrganizations/cuttingcompany.example.com/peers/peer0.cuttingcompany.example.com/msp:/etc/hyperledger/msp/peer
-      - ./crypto-config/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/msp:/etc/hyperledger/msp/user
-      - ./crypto-config/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/tls:/etc/hyperledger/msp/tls
+      - ../organizations/peerOrganizations/cuttingcompany.example.com/peers/peer0.cuttingcompany.example.com:/etc/hyperledger/fabric
+      - peer0.cuttingcompany.example.com:/var/hyperledger/production
     ports:
       - 9051:9051
       - 9445:9445
@@ -238,10 +258,18 @@ services:
       - test
 
   peer0.gradinglab.example.com:
+    container_name: peer0.gradinglab.example.com
     image: hyperledger/fabric-peer:latest
     environment:
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_LOGGING_LEVEL=INFO
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
       - CORE_PEER_ID=peer0.gradinglab.example.com
       - CORE_PEER_ADDRESS=peer0.gradinglab.example.com:10051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:10051
@@ -250,14 +278,16 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.gradinglab.example.com:10051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.gradinglab.example.com:10051
       - CORE_PEER_LOCALMSPID=GradingLabMSP
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_OPERATIONS_LISTENADDRESS=peer0.gradinglab.example.com:9446
+      - CORE_METRICS_PROVIDER=prometheus
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer0gradinglab"}
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+    working_dir: /root
     command: peer node start
     volumes:
-      - /var/run/:/host/var/run/
-      - ./crypto-config/peerOrganizations/gradinglab.example.com/peers/peer0.gradinglab.example.com/msp:/etc/hyperledger/msp/peer
-      - ./crypto-config/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/msp:/etc/hyperledger/msp/user
-      - ./crypto-config/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/tls:/etc/hyperledger/msp/tls
+      - ../organizations/peerOrganizations/gradinglab.example.com/peers/peer0.gradinglab.example.com:/etc/hyperledger/fabric
+      - peer0.gradinglab.example.com:/var/hyperledger/production
     ports:
       - 10051:10051
       - 9446:9446
@@ -265,10 +295,18 @@ services:
       - test
 
   peer0.jewelrymaker.example.com:
+    container_name: peer0.jewelrymaker.example.com
     image: hyperledger/fabric-peer:latest
     environment:
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_LOGGING_LEVEL=INFO
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
       - CORE_PEER_ID=peer0.jewelrymaker.example.com
       - CORE_PEER_ADDRESS=peer0.jewelrymaker.example.com:11051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:11051
@@ -277,14 +315,16 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.jewelrymaker.example.com:11051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.jewelrymaker.example.com:11051
       - CORE_PEER_LOCALMSPID=JewelryMakerMSP
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_OPERATIONS_LISTENADDRESS=peer0.jewelrymaker.example.com:9447
+      - CORE_METRICS_PROVIDER=prometheus
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer0jewelrymaker"}
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+    working_dir: /root
     command: peer node start
     volumes:
-      - /var/run/:/host/var/run/
-      - ./crypto-config/peerOrganizations/jewelrymaker.example.com/peers/peer0.jewelrymaker.example.com/msp:/etc/hyperledger/msp/peer
-      - ./crypto-config/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/msp:/etc/hyperledger/msp/user
-      - ./crypto-config/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/tls:/etc/hyperledger/msp/tls
+      - ../organizations/peerOrganizations/jewelrymaker.example.com/peers/peer0.jewelrymaker.example.com:/etc/hyperledger/fabric
+      - peer0.jewelrymaker.example.com:/var/hyperledger/production
     ports:
       - 11051:11051
       - 9447:9447
