@@ -109,8 +109,24 @@ parsePeerConnectionParameters() {
     fi
     PEER_CONN_PARMS=("${PEER_CONN_PARMS[@]}" --peerAddresses $CORE_PEER_ADDRESS)
     ## Set path to TLS certificate
-    CA_VAR="PEER0_${1}_CA"
-    TLSINFO=(--tlsRootCertFiles "${!CA_VAR}")
+    case $1 in
+    MiningCompanyMSP)
+      CA_VAR=$PEER0_MiningCompany_CA
+      ;;
+    CuttingCompanyMSP)
+      CA_VAR=$PEER0_CuttingCompany_CA
+      ;;
+    GradingLabMSP)
+      CA_VAR=$PEER0_GradingLab_CA
+      ;;
+    JewelryMakerMSP)
+      CA_VAR=$PEER0_JewelryMaker_CA
+      ;;
+    *)
+      errorln "ORG Unknown"
+      ;;
+    esac
+    TLSINFO=(--tlsRootCertFiles "$CA_VAR")
     PEER_CONN_PARMS=("${PEER_CONN_PARMS[@]}" "${TLSINFO[@]}")
     # shift by one to get to the next organization
     shift
