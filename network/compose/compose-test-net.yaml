@@ -84,7 +84,7 @@ services:
       - 8051:8051
       - 8053:8053
     networks:
-      - fabric-test
+      - test
 
   peer0.cuttingcompany.example.com:
     image: hyperledger/fabric-peer:latest
@@ -111,7 +111,7 @@ services:
       - 9051:9051
       - 9053:9053
     networks:
-      - fabric-test
+      - test
 
   peer0.gradinglab.example.com:
     image: hyperledger/fabric-peer:latest
@@ -138,7 +138,7 @@ services:
       - 10051:10051
       - 10053:10053
     networks:
-      - fabric-test
+      - test
 
   peer0.jewelrymaker.example.com:
     image: hyperledger/fabric-peer:latest
@@ -165,7 +165,7 @@ services:
       - 11051:11051
       - 11053:11053
     networks:
-      - fabric-test
+      - test
 
   cli:
     container_name: cli

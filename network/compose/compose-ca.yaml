@@ -3,51 +3,90 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-version: '3.7'
+version: "3.7"
 
 networks:
   test:
     name: fabric_test
 
 services:
-
-  ca_org1:
+  miningcompany:
     image: hyperledger/fabric-ca:latest
     labels:
       service: hyperledger-fabric
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca-org1
+      - FABRIC_CA_SERVER_CA_NAME=ca-miningcompany
       - FABRIC_CA_SERVER_TLS_ENABLED=true
-      - FABRIC_CA_SERVER_PORT=7054
-      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:17054
+      - FABRIC_CA_SERVER_PORT=8054
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:28054
     ports:
-      - "7054:7054"
-      - "17054:17054"
+      - "8054:8054"
+      - "28054:28054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ../organizations/fabric-ca/org1:/etc/hyperledger/fabric-ca-server
-    container_name: ca_org1
+      - ../organizations/fabric-ca/miningcompany:/etc/hyperledger/fabric-ca-server
+    container_name: ca_miningcompany
     networks:
       - test
 
-  ca_org2:
+  cuttingcompany:
     image: hyperledger/fabric-ca:latest
     labels:
       service: hyperledger-fabric
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca-org2
+      - FABRIC_CA_SERVER_CA_NAME=ca-cuttingcompany
       - FABRIC_CA_SERVER_TLS_ENABLED=true
-      - FABRIC_CA_SERVER_PORT=8054
-      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:18054
+      - FABRIC_CA_SERVER_PORT=9054
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:29054
     ports:
-      - "8054:8054"
-      - "18054:18054"
+      - "9054:9054"
+      - "29054:29054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ../organizations/fabric-ca/org2:/etc/hyperledger/fabric-ca-server
-    container_name: ca_org2
+      - ../organizations/fabric-ca/cuttingcompany:/etc/hyperledger/fabric-ca-server
+    container_name: ca_cuttingcompany
+    networks:
+      - test
+
+  gradinglab:
+    image: hyperledger/fabric-ca:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-gradinglab
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=10054
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:30054
+    ports:
+      - "10054:10054"
+      - "30054:30054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ../organizations/fabric-ca/gradinglab:/etc/hyperledger/fabric-ca-server
+    container_name: ca_gradinglab
+    networks:
+      - test
+
+  jewelrymaker:
+    image: hyperledger/fabric-ca:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-jewelrymaker
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=11054
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:31054
+    ports:
+      - "11054:11054"
+      - "31054:31054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ../organizations/fabric-ca/jewelrymaker:/etc/hyperledger/fabric-ca-server
+    container_name: ca_jewelrymaker
     networks:
       - test
 
