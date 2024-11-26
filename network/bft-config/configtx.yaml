@@ -41,52 +41,75 @@ Organizations:
       - orderer2.example.com:7052
       - orderer3.example.com:7056
       - orderer4.example.com:7058
-  - &Org1
-    # DefaultOrg defines the organization which is used in the sampleconfig
-    # of the fabric.git development environment
-    Name: Org1MSP
-    # ID to load the MSP definition as
-    ID: Org1MSP
-    MSPDir: ../organizations/peerOrganizations/org1.example.com/msp
-    # Policies defines the set of policies at this level of the config tree
-    # For organization policies, their canonical path is usually
-    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+  - &MiningCompanyOrg
+    Name: MiningCompanyMSP
+    ID: MiningCompanyMSP
+    MSPDir: ../organizations/peerOrganizations/miningcompany.example.com/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"
+        Rule: "OR('MiningCompanyMSP.admin', 'MiningCompanyMSP.peer', 'MiningCompanyMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('Org1MSP.admin', 'Org1MSP.client')"
+        Rule: "OR('MiningCompanyMSP.admin', 'MiningCompanyMSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('Org1MSP.admin')"
+        Rule: "OR('MiningCompanyMSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('Org1MSP.peer')"
-  - &Org2
-    # DefaultOrg defines the organization which is used in the sampleconfig
-    # of the fabric.git development environment
-    Name: Org2MSP
-    # ID to load the MSP definition as
-    ID: Org2MSP
-    MSPDir: ../organizations/peerOrganizations/org2.example.com/msp
-    # Policies defines the set of policies at this level of the config tree
-    # For organization policies, their canonical path is usually
-    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+        Rule: "OR('MiningCompanyMSP.peer')"
+  - &CuttingCompanyOrg
+    Name: CuttingCompanyMSP
+    ID: CuttingCompanyMSP
+    MSPDir: ../organizations/peerOrganizations/cuttingcompany.example.com/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"
+        Rule: "OR('CuttingCompanyMSP.admin', 'CuttingCompanyMSP.peer', 'CuttingCompanyMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('Org2MSP.admin', 'Org2MSP.client')"
+        Rule: "OR('CuttingCompanyMSP.admin', 'CuttingCompanyMSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('Org2MSP.admin')"
+        Rule: "OR('CuttingCompanyMSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('Org2MSP.peer')"
+        Rule: "OR('CuttingCompanyMSP.peer')"
+  - &GradingLabOrg
+    Name: GradingLabMSP
+    ID: GradingLabMSP
+    MSPDir: ../organizations/peerOrganizations/gradinglab.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('GradingLabMSP.admin', 'GradingLabMSP.peer', 'GradingLabMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('GradingLabMSP.admin', 'GradingLabMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('GradingLabMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('GradingLabMSP.peer')"
+  - &JewelryMakerOrg
+    Name: JewelryMakerMSP
+    ID: JewelryMakerMSP
+    MSPDir: ../organizations/peerOrganizations/jewelrymaker.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('JewelryMakerMSP.admin', 'JewelryMakerMSP.peer', 'JewelryMakerMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('JewelryMakerMSP.admin', 'JewelryMakerMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('JewelryMakerMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('JewelryMakerMSP.peer')"
+
 ################################################################################
 #
 #   SECTION: Capabilities
@@ -179,8 +202,8 @@ Application: &ApplicationDefaults
 #   genesis block for orderer related parameters
 #
 ################################################################################
-Orderer: &OrdererDefaults
-  # Batch Timeout: The amount of time to wait before creating a batch
+Orderer:
+  &OrdererDefaults # Batch Timeout: The amount of time to wait before creating a batch
   BatchTimeout: 2s
   # Batch Size: Controls the number of messages batched into a block
   BatchSize:
@@ -307,6 +330,30 @@ Profiles:
     Application:
       <<: *ApplicationDefaults
       Organizations:
-        - *Org1
-        - *Org2
+        - *MiningCompanyOrg
+        - *CuttingCompanyOrg
+        - *GradingLabOrg
+        - *JewelryMakerOrg
+      Capabilities: *ApplicationCapabilities
+  ChannelUsingRaft:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      OrdererType: etcdraft
+      EtcdRaft:
+        Consenters:
+          - Host: orderer.example.com
+            Port: 7050
+            ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+            ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+      Organizations:
+        - *OrdererOrg
+      Capabilities: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *MiningCompanyOrg
+        - *CuttingCompanyOrg
+        - *GradingLabOrg
+        - *JewelryMakerOrg
       Capabilities: *ApplicationCapabilities
