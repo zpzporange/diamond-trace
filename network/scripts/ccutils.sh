@@ -87,7 +87,7 @@ function commitChaincodeDefinition() {
   res=$?
   { set +x; } 2>/dev/null
   cat log.txt
-  verifyResult $res "Chaincode definition commit failed on channel '$CHANNEL_NAME' failed"
+  verifyResult $res "Chaincode definition commit failed on peer0.${ORG} on channel '$CHANNEL_NAME' failed"
   successln "Chaincode definition committed on channel '$CHANNEL_NAME'"
 }
 
