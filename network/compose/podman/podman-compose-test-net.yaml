@@ -3,14 +3,22 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-version: '3.7'
+version: "3.7"
 
 services:
-  peer0.org1.example.com:
+  peer0.miningcompany.example.com:
     volumes:
       - ./podman/peercfg:/etc/hyperledger/peercfg
 
-  peer0.org2.example.com:
+  peer0.cuttingcompany.example.com:
+    volumes:
+      - ./podman/peercfg:/etc/hyperledger/peercfg
+
+  peer0.gradinglab.example.com:
+    volumes:
+      - ./podman/peercfg:/etc/hyperledger/peercfg
+
+  peer0.jewelrymaker.example.com:
     volumes:
       - ./podman/peercfg:/etc/hyperledger/peercfg
 

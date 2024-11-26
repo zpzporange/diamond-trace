@@ -82,7 +82,7 @@ services:
       - ./crypto-config/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/tls:/etc/hyperledger/msp/tls
     ports:
       - 8051:8051
-      - 8053:8053
+      - 9444:9444
     networks:
       - test
 
@@ -109,7 +109,7 @@ services:
       - ./crypto-config/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/tls:/etc/hyperledger/msp/tls
     ports:
       - 9051:9051
-      - 9053:9053
+      - 9445:9445
     networks:
       - test
 
@@ -136,7 +136,7 @@ services:
       - ./crypto-config/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/tls:/etc/hyperledger/msp/tls
     ports:
       - 10051:10051
-      - 10053:10053
+      - 9446:9446
     networks:
       - test
 
@@ -163,7 +163,7 @@ services:
       - ./crypto-config/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/tls:/etc/hyperledger/msp/tls
     ports:
       - 11051:11051
-      - 11053:11053
+      - 9447:9447
     networks:
       - test
 
