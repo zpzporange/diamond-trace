@@ -24,10 +24,10 @@ VERBOSE=${12:-"false"}
 CCAAS_SERVER_PORT=9999
 
 : ${CONTAINER_CLI:="docker"}
-if command -v ${CONTAINER_CLI}-compose > /dev/null 2>&1; then
-    : ${CONTAINER_CLI_COMPOSE:="${CONTAINER_CLI}-compose"}
+if command -v ${CONTAINER_CLI}-compose >/dev/null 2>&1; then
+  : ${CONTAINER_CLI_COMPOSE:="${CONTAINER_CLI}-compose"}
 else
-    : ${CONTAINER_CLI_COMPOSE:="${CONTAINER_CLI} compose"}
+  : ${CONTAINER_CLI_COMPOSE:="${CONTAINER_CLI} compose"}
 fi
 infoln "Using ${CONTAINER_CLI} and ${CONTAINER_CLI_COMPOSE}"
 
@@ -84,7 +84,7 @@ packageChaincode() {
   label=${CC_NAME}_${CC_VERSION}
   mkdir -p "$tempdir/src"
 
-cat > "$tempdir/src/connection.json" <<CONN_EOF
+  cat >"$tempdir/src/connection.json" <<CONN_EOF
 {
   "address": "${address}",
   "dial_timeout": "10s",
@@ -92,22 +92,22 @@ cat > "$tempdir/src/connection.json" <<CONN_EOF
 }
 CONN_EOF
 
-   mkdir -p "$tempdir/pkg"
+  mkdir -p "$tempdir/pkg"
 
-cat << METADATA-EOF > "$tempdir/pkg/metadata.json"
+  cat <<METADATA-EOF >"$tempdir/pkg/metadata.json"
 {
     "type": "ccaas",
     "label": "$label"
 }
 METADATA-EOF
 
-    tar -C "$tempdir/src" -czf "$tempdir/pkg/code.tar.gz" .
-    tar -C "$tempdir/pkg" -czf "$CC_NAME.tar.gz" metadata.json code.tar.gz
-    rm -Rf "$tempdir"
+  tar -C "$tempdir/src" -czf "$tempdir/pkg/code.tar.gz" .
+  tar -C "$tempdir/pkg" -czf "$CC_NAME.tar.gz" metadata.json code.tar.gz
+  rm -Rf "$tempdir"
 
-    PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CC_NAME}.tar.gz)
-  
-    successln "Chaincode is packaged  ${address}"
+  PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CC_NAME}.tar.gz)
+
+  successln "Chaincode is packaged  ${address}"
 }
 
 buildDockerImages() {
@@ -134,34 +134,34 @@ startDockerContainer() {
   if [ "$CCAAS_DOCKER_RUN" = "true" ]; then
     infoln "Starting the Chaincode-as-a-Service docker container..."
     set -x
-    ${CONTAINER_CLI} run --rm -d --name peer0miningcompany_${CC_NAME}_ccaas  \
-                  --network fabric_test \
-                  -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
-                  -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
-                    ${CC_NAME}_ccaas_image:latest
+    ${CONTAINER_CLI} run --rm -d --name peer0miningcompany_${CC_NAME}_ccaas \
+      --network fabric_test \
+      -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
+      -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
+      ${CC_NAME}_ccaas_image:latest
 
-    ${CONTAINER_CLI} run --rm -d --name peer0cuttingcompany_${CC_NAME}_ccaas  \
-                  --network fabric_test \
-                  -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
-                  -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
-                    ${CC_NAME}_ccaas_image:latest
+    ${CONTAINER_CLI} run --rm -d --name peer0cuttingcompany_${CC_NAME}_ccaas \
+      --network fabric_test \
+      -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
+      -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
+      ${CC_NAME}_ccaas_image:latest
 
-    ${CONTAINER_CLI} run --rm -d --name peer0gradinglab_${CC_NAME}_ccaas  \
-                  --network fabric_test \
-                  -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
-                  -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
-                    ${CC_NAME}_ccaas_image:latest
+    ${CONTAINER_CLI} run --rm -d --name peer0gradinglab_${CC_NAME}_ccaas \
+      --network fabric_test \
+      -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
+      -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
+      ${CC_NAME}_ccaas_image:latest
 
-    ${CONTAINER_CLI} run --rm -d --name peer0jewelrymaker_${CC_NAME}_ccaas  \
-                  --network fabric_test \
-                  -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
-                  -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
-                    ${CC_NAME}_ccaas_image:latest
+    ${CONTAINER_CLI} run --rm -d --name peer0jewelrymaker_${CC_NAME}_ccaas \
+      --network fabric_test \
+      -e CHAINCODE_SERVER_ADDRESS=0.0.0.0:${CCAAS_SERVER_PORT} \
+      -e CHAINCODE_ID=$PACKAGE_ID -e CORE_CHAINCODE_ID_NAME=$PACKAGE_ID \
+      ${CC_NAME}_ccaas_image:latest
     res=$?
     { set +x; } 2>/dev/null
     cat log.txt
     verifyResult $res "Failed to start the container container '${CC_NAME}_ccaas_image:latest' "
-    successln "Docker container started successfully '${CC_NAME}_ccaas_image:latest'" 
+    successln "Docker container started successfully '${CC_NAME}_ccaas_image:latest'"
   else
     infoln "Not starting docker containers; these are the commands we would have run"
     infoln "    ${CONTAINER_CLI} run --rm -d --name peer0miningcompany_${CC_NAME}_ccaas  \
@@ -187,47 +187,7 @@ startDockerContainer() {
   fi
 }
 
-## Function to set environment variables for a given organization
-setGlobals() {
-  ORG=$1
-  DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-  ORDERER_CA=${DIR}/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
-
-  if [[ ${ORG,,} == "miningcompanymsp" ]]; then
-    CORE_PEER_LOCALMSPID=MiningCompanyMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp
-    CORE_PEER_ADDRESS=localhost:8051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
-    PEER0_ORG1_CA=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "cuttingcompanymsp" ]]; then
-    CORE_PEER_LOCALMSPID=CuttingCompanyMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/msp
-    CORE_PEER_ADDRESS=localhost:9051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
-    PEER0_ORG2_CA=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "gradinglabmsp" ]]; then
-    CORE_PEER_LOCALMSPID=GradingLabMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/msp
-    CORE_PEER_ADDRESS=localhost:10051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
-    PEER0_ORG3_CA=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "jewelrymakermsp" ]]; then
-    CORE_PEER_LOCALMSPID=JewelryMakerMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/msp
-    CORE_PEER_ADDRESS=localhost:11051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
-    PEER0_ORG4_CA=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
-
-  else
-    echo "Unknown \"$ORG\", please choose MiningCompanyMSP, CuttingCompanyMSP, GradingLabMSP, or JewelryMakerMSP"
-    exit 1
-  fi
-}
-
-# Build the docker image 
+# Build the docker image
 buildDockerImages
 
 ## package the chaincode

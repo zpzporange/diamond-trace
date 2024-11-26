@@ -54,7 +54,7 @@ FABRIC_CFG_PATH=$PWD/config/
 . scripts/ccutils.sh
 
 function checkPrereqs() {
-  jq --version > /dev/null 2>&1
+  jq --version >/dev/null 2>&1
 
   if [[ $? -ne 0 ]]; then
     errorln "jq command not found..."
@@ -65,51 +65,11 @@ function checkPrereqs() {
   fi
 }
 
-## Function to set environment variables for a given organization
-setGlobals() {
-  ORG=$1
-  DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-  ORDERER_CA=${DIR}/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
-
-  if [[ ${ORG,,} == "miningcompanymsp" ]]; then
-    CORE_PEER_LOCALMSPID=MiningCompanyMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp
-    CORE_PEER_ADDRESS=localhost:8051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
-    PEER0_ORG1_CA=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "cuttingcompanymsp" ]]; then
-    CORE_PEER_LOCALMSPID=CuttingCompanyMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/msp
-    CORE_PEER_ADDRESS=localhost:9051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
-    PEER0_ORG2_CA=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "gradinglabmsp" ]]; then
-    CORE_PEER_LOCALMSPID=GradingLabMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/msp
-    CORE_PEER_ADDRESS=localhost:10051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
-    PEER0_ORG3_CA=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "jewelrymakermsp" ]]; then
-    CORE_PEER_LOCALMSPID=JewelryMakerMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/msp
-    CORE_PEER_ADDRESS=localhost:11051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
-    PEER0_ORG4_CA=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
-
-  else
-    echo "Unknown \"$ORG\", please choose MiningCompanyMSP, CuttingCompanyMSP, GradingLabMSP, or JewelryMakerMSP"
-    exit 1
-  fi
-}
-
 # check for prerequisites
 checkPrereqs
 
 ## package the chaincode
-./scripts/packageCC.sh $CC_NAME $CC_SRC_PATH $CC_SRC_LANGUAGE $CC_VERSION 
+./scripts/packageCC.sh $CC_NAME $CC_SRC_PATH $CC_SRC_LANGUAGE $CC_VERSION
 
 PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CC_NAME}.tar.gz)
 

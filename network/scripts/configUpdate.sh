@@ -8,42 +8,6 @@
 # import utils
 . scripts/envVar.sh
 
-# Function to set environment variables for a given organization
-setGlobals() {
-  ORG=$1
-  DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-  ORDERER_CA=${DIR}/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
-
-  if [[ ${ORG,,} == "miningcompanymsp" ]]; then
-    CORE_PEER_LOCALMSPID=MiningCompanyMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp
-    CORE_PEER_ADDRESS=localhost:8051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "cuttingcompanymsp" ]]; then
-    CORE_PEER_LOCALMSPID=CuttingCompanyMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/msp
-    CORE_PEER_ADDRESS=localhost:9051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "gradinglabmsp" ]]; then
-    CORE_PEER_LOCALMSPID=GradingLabMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/msp
-    CORE_PEER_ADDRESS=localhost:10051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "jewelrymakermsp" ]]; then
-    CORE_PEER_LOCALMSPID=JewelryMakerMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/msp
-    CORE_PEER_ADDRESS=localhost:11051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
-
-  else
-    echo "Unknown \"$ORG\", please choose MiningCompanyMSP, CuttingCompanyMSP, GradingLabMSP, or JewelryMakerMSP"
-    exit 1
-  fi
-}
-
 # fetchChannelConfig <org> <channel_id> <output_json>
 # Writes the current channel config for a given channel to a JSON file
 # NOTE: this must be run in a CLI container since it requires configtxlator

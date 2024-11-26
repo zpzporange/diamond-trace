@@ -216,7 +216,7 @@ function resolveSequence() {
   # if the committed sequence and the approved sequence match, then increment the sequence
   # otherwise, use the approved sequence
   if [ $COMMITTED_CC_SEQUENCE == $APPROVED_CC_SEQUENCE ]; then
-    CC_SEQUENCE=$((COMMITTED_CC_SEQUENCE+1))
+    CC_SEQUENCE=$((COMMITTED_CC_SEQUENCE + 1))
   else
     CC_SEQUENCE=$APPROVED_CC_SEQUENCE
   fi
@@ -269,8 +269,7 @@ listAllCommitted() {
     COUNTER=$(expr $COUNTER + 1)
   done
   if test $rc -eq 0; then
-    for channel in $CHANNEL_LIST
-    do
+    for channel in $CHANNEL_LIST; do
       queryCommittedOnChannel "$channel"
     done
   else
@@ -283,7 +282,7 @@ chaincodeInvoke() {
   CHANNEL=$2
   CC_NAME=$3
   CC_INVOKE_CONSTRUCTOR=$4
-  
+
   infoln "Invoking on peer0.org${ORG} on channel '$CHANNEL'..."
   setGlobals $ORG
   local rc=1
@@ -294,7 +293,7 @@ chaincodeInvoke() {
     sleep $DELAY
     infoln "Attempting to Invoke on peer0.org${ORG}, Retry after $DELAY seconds."
     set -x
-    peer chaincode invoke -o localhost:7050 -C $CHANNEL -n ${CC_NAME} -c ${CC_INVOKE_CONSTRUCTOR} --tls --cafile $ORDERER_CA  --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_ORG1_CA --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA  --peerAddresses localhost:10051 --tlsRootCertFiles $PEER0_ORG3_CA --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_ORG4_CA  >&log.txt
+    peer chaincode invoke -o localhost:7050 -C $CHANNEL -n ${CC_NAME} -c ${CC_INVOKE_CONSTRUCTOR} --tls --cafile $ORDERER_CA --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_ORG1_CA --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA --peerAddresses localhost:10051 --tlsRootCertFiles $PEER0_ORG3_CA --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_ORG4_CA >&log.txt
     res=$?
     { set +x; } 2>/dev/null
     let rc=$res
@@ -335,45 +334,5 @@ chaincodeQuery() {
     successln "Query successful on peer0.org${ORG} on channel '$CHANNEL'"
   else
     fatalln "After $MAX_RETRY attempts, Query result on peer0.org${ORG} is INVALID!"
-  fi
-}
-
-## Function to set environment variables for a given organization
-setGlobals() {
-  ORG=$1
-  DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-  ORDERER_CA=${DIR}/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
-
-  if [[ ${ORG,,} == "miningcompanymsp" ]]; then
-    CORE_PEER_LOCALMSPID=MiningCompanyMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp
-    CORE_PEER_ADDRESS=localhost:8051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
-    PEER0_ORG1_CA=${DIR}/test-network/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "cuttingcompanymsp" ]]; then
-    CORE_PEER_LOCALMSPID=CuttingCompanyMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/msp
-    CORE_PEER_ADDRESS=localhost:9051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
-    PEER0_ORG2_CA=${DIR}/test-network/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "gradinglabmsp" ]]; then
-    CORE_PEER_LOCALMSPID=GradingLabMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/msp
-    CORE_PEER_ADDRESS=localhost:10051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
-    PEER0_ORG3_CA=${DIR}/test-network/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
-
-  elif [[ ${ORG,,} == "jewelrymakermsp" ]]; then
-    CORE_PEER_LOCALMSPID=JewelryMakerMSP
-    CORE_PEER_MSPCONFIGPATH=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/msp
-    CORE_PEER_ADDRESS=localhost:11051
-    CORE_PEER_TLS_ROOTCERT_FILE=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
-    PEER0_ORG4_CA=${DIR}/test-network/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
-
-  else
-    echo "Unknown \"$ORG\", please choose MiningCompanyMSP, CuttingCompanyMSP, GradingLabMSP, or JewelryMakerMSP"
-    exit 1
   fi
 }

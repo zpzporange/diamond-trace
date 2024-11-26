@@ -12,6 +12,10 @@
 
 export CORE_PEER_TLS_ENABLED=true
 export ORDERER_CA=${PWD}/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+export PEER0_MiningCompany_CA=${PWD}/organizations/peerOrganizations/miningcompany.example.com/tlsca/tlsca.miningcompany.example.com-cert.pem
+export PEER0_CuttingCompany_CA=${PWD}/organizations/peerOrganizations/cuttingcompany.example.com/tlsca/tlsca.cuttingcompany.example.com-cert.pem
+export PEER0_GradingLab_CA=${PWD}/organizations/peerOrganizations/gradinglab.example.com/tlsca/tlsca.gradinglab.example.com-cert.pem
+export PEER0_JewelryMaker_CA=${PWD}/organizations/peerOrganizations/jewelrymaker.example.com/tlsca/tlsca.jewelrymaker.example.com-cert.pem
 
 # Set environment variables for the peer org
 setGlobals() {
@@ -24,33 +28,33 @@ setGlobals() {
   infoln "Using organization ${USING_ORG}"
 
   case $USING_ORG in
-    MiningCompanyMSP)
-      export CORE_PEER_LOCALMSPID="MiningCompanyMSP"
-      export CORE_PEER_TLS_ROOTCERT_FILE=$PEERPEM
-      export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp
-      export CORE_PEER_ADDRESS=localhost:8051
-      ;;
-    CuttingCompanyMSP)
-      export CORE_PEER_LOCALMSPID="CuttingCompanyMSP"
-      export CORE_PEER_TLS_ROOTCERT_FILE=$PEERPEM
-      export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/msp
-      export CORE_PEER_ADDRESS=localhost:9051
-      ;;
-    GradingLabMSP)
-      export CORE_PEER_LOCALMSPID="GradingLabMSP"
-      export CORE_PEER_TLS_ROOTCERT_FILE=$PEERPEM
-      export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/msp
-      export CORE_PEER_ADDRESS=localhost:10051
-      ;;
-    JewelryMakerMSP)
-      export CORE_PEER_LOCALMSPID="JewelryMakerMSP"
-      export CORE_PEER_TLS_ROOTCERT_FILE=$PEERPEM
-      export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/msp
-      export CORE_PEER_ADDRESS=localhost:11051
-      ;;
-    *)
-      errorln "ORG Unknown"
-      ;;
+  MiningCompanyMSP)
+    export CORE_PEER_LOCALMSPID="MiningCompanyMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_MiningCompany_CA
+    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp
+    export CORE_PEER_ADDRESS=localhost:8051
+    ;;
+  CuttingCompanyMSP)
+    export CORE_PEER_LOCALMSPID="CuttingCompanyMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_CuttingCompany_CA
+    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/cuttingcompany.example.com/users/Admin@cuttingcompany.example.com/msp
+    export CORE_PEER_ADDRESS=localhost:9051
+    ;;
+  GradingLabMSP)
+    export CORE_PEER_LOCALMSPID="GradingLabMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_GradingLab_CA
+    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/gradinglab.example.com/users/Admin@gradinglab.example.com/msp
+    export CORE_PEER_ADDRESS=localhost:10051
+    ;;
+  JewelryMakerMSP)
+    export CORE_PEER_LOCALMSPID="JewelryMakerMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_JewelryMaker_CA
+    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/jewelrymaker.example.com/users/Admin@jewelrymaker.example.com/msp
+    export CORE_PEER_ADDRESS=localhost:11051
+    ;;
+  *)
+    errorln "ORG Unknown"
+    ;;
   esac
 
   if [ "$VERBOSE" == "true" ]; then
@@ -70,21 +74,21 @@ setGlobalsCLI() {
   fi
 
   case $USING_ORG in
-    MiningCompanyMSP)
-      export CORE_PEER_ADDRESS=peer0.miningcompany.example.com:8051
-      ;;
-    CuttingCompanyMSP)
-      export CORE_PEER_ADDRESS=peer0.cuttingcompany.example.com:9051
-      ;;
-    GradingLabMSP)
-      export CORE_PEER_ADDRESS=peer0.gradinglab.example.com:10051
-      ;;
-    JewelryMakerMSP)
-      export CORE_PEER_ADDRESS=peer0.jewelrymaker.example.com:11051
-      ;;
-    *)
-      errorln "ORG Unknown"
-      ;;
+  MiningCompanyMSP)
+    export CORE_PEER_ADDRESS=peer0.miningcompany.example.com:8051
+    ;;
+  CuttingCompanyMSP)
+    export CORE_PEER_ADDRESS=peer0.cuttingcompany.example.com:9051
+    ;;
+  GradingLabMSP)
+    export CORE_PEER_ADDRESS=peer0.gradinglab.example.com:10051
+    ;;
+  JewelryMakerMSP)
+    export CORE_PEER_ADDRESS=peer0.jewelrymaker.example.com:11051
+    ;;
+  *)
+    errorln "ORG Unknown"
+    ;;
   esac
 }
 
@@ -98,8 +102,7 @@ parsePeerConnectionParameters() {
     setGlobals $1
     PEER="peer0.$1"
     ## Set peer addresses
-    if [ -z "$PEERS" ]
-    then
+    if [ -z "$PEERS" ]; then
       PEERS="$PEER"
     else
       PEERS="$PEERS $PEER"
