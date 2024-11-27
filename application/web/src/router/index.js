@@ -51,7 +51,7 @@ export const constantRoutes = [
       path: 'uplink',
       name: 'Uplink',
       component: () => import('@/views/uplink/index'),
-      meta: { title: '溯源信息录入', icon: 'el-icon-edit-outline' }
+      meta: { title: 'Trace info entry', icon: 'el-icon-edit-outline' }
     }]
   },
 
@@ -62,7 +62,7 @@ export const constantRoutes = [
       path: 'trace',
       name: 'Trace',
       component: () => import('@/views/trace/index'),
-      meta: { title: '溯源查询', icon: 'el-icon-search' }
+      meta: { title: 'Trace query', icon: 'el-icon-search' }
     }]
   },
 
@@ -167,7 +167,7 @@ export const constantRoutes = [
       {
         // path: 'http://172.25.165.94:8080',
         path: 'http://8.218.105.89:8080',
-        meta: { title: '区块链浏览器', icon: 'el-icon-discover' }
+        meta: { title: 'Blockchain browser', icon: 'el-icon-discover' }
       }
     ]
   },
