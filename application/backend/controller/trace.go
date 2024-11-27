@@ -22,7 +22,7 @@ func Uplink(c *gin.Context) {
 	res, err := pkg.ChaincodeInvoke("Uplink", args)
 	if err != nil {
 		c.JSON(200, gin.H{
-			"message": "uplink failed" + err.Error(),
+			"message": "uplink failed " + err.Error(),
 		})
 		return
 	}
