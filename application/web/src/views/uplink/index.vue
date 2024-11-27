@@ -1,8 +1,8 @@
 <template>
   <div class="uplink-container">
     <div style="color:#909399;margin-bottom: 30px">
-      当前用户：{{ name }};
-      用户角色: {{ userType }}
+      Active user：{{ name }};
+      User type: {{ userType }}
     </div>
     <div>
       <el-form ref="form" :model="tracedata" label-width="80px" size="mini" style="">
@@ -11,73 +11,75 @@
           <el-input v-model="tracedata.traceability_code" />
         </el-form-item>
 
-        <div v-show="userType == 'Mining company'"><!-- 种植户 -->
-          <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Farmer_input.Fa_fruitName" />
-          </el-form-item>
-          <el-form-item label="miner:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Farmer_input.Fa_origin" />
-          </el-form-item>
-          <el-form-item label="miningLocation:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Farmer_input.Fa_plantTime" />
-          </el-form-item>
-          <el-form-item label="miningTime:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Farmer_input.Fa_pickingTime" />
-          </el-form-item>
-          <el-form-item label="companyName:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Farmer_input.Fa_farmerName" />
-          </el-form-item>
-        </div>
-        <div v-show="userType == 'Cutting company'"><!-- 工厂 -->
-          <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Factory_input.Fac_productName" />
-          </el-form-item>
-          <el-form-item label="cutTime:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Factory_input.Fac_productionbatch" />
-          </el-form-item>
-          <el-form-item label="shape:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Factory_input.Fac_productionTime" />
-          </el-form-item>
-          <el-form-item label="weight:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Factory_input.Fac_factoryName" />
-          </el-form-item>
-          <el-form-item label="companyName:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Factory_input.Fac_contactNumber" />
-          </el-form-item>
-        </div>
-        <div v-show="userType == 'Grading lab'"><!-- 运输司机 -->
-          <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Driver_input.Dr_name" />
-          </el-form-item>
-          <el-form-item label="caratWeight:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Driver_input.Dr_age" />
-          </el-form-item>
-          <el-form-item label="quality:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Driver_input.Dr_phone" />
-          </el-form-item>
-          <el-form-item label="certificateNo:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Driver_input.Dr_carNumber" />
-          </el-form-item>
-          <el-form-item label="gradingLabName:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Driver_input.Dr_transport" />
-          </el-form-item>
-        </div>
-        <div v-show="userType == 'Jewelry maker'"><!-- 珠宝商 -->
-          <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Shop_input.Sh_storeTime" />
-          </el-form-item>
-          <el-form-item label="design:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Shop_input.Sh_sellTime" />
-          </el-form-item>
-          <el-form-item label="manufactureDate:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Shop_input.Sh_shopName" />
-          </el-form-item>
-          <el-form-item label="material:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Shop_input.Sh_shopAddress" />
-          </el-form-item>
-          <el-form-item label="jewelerName:" style="width: 300px" label-width="120px">
-            <el-input v-model="tracedata.Shop_input.Sh_shopPhone" />
-          </el-form-item>
+        <div>
+          <div v-show="userType == 'Mining company'">
+            <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Mining_company_input.Mc_diamondName" />
+            </el-form-item>
+            <el-form-item label="miner:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Mining_company_input.Mc_miner" />
+            </el-form-item>
+            <el-form-item label="miningLocation:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Mining_company_input.Mc_miningLocation" />
+            </el-form-item>
+            <el-form-item label="miningTime:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Mining_company_input.Mc_miningTime" />
+            </el-form-item>
+            <el-form-item label="companyName:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Mining_company_input.Mc_companyName" />
+            </el-form-item>
+          </div>
+          <div v-show="userType == 'Cutting company'">
+            <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Cutting_company_input.Cc_diamondName" />
+            </el-form-item>
+            <el-form-item label="cutTime:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Cutting_company_input.Cc_cutTime" />
+            </el-form-item>
+            <el-form-item label="shape:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Cutting_company_input.Cc_shape" />
+            </el-form-item>
+            <el-form-item label="weight:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Cutting_company_input.Cc_weight" />
+            </el-form-item>
+            <el-form-item label="companyName:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Cutting_company_input.Cc_companyName" />
+            </el-form-item>
+          </div>
+          <div v-show="userType == 'Grading lab'">
+            <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Grading_lab_input.Gl_diamondName" />
+            </el-form-item>
+            <el-form-item label="caratWeight:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Grading_lab_input.Gl_caratWeight" />
+            </el-form-item>
+            <el-form-item label="quality:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Grading_lab_input.Gl_quality" />
+            </el-form-item>
+            <el-form-item label="certificateNo:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Grading_lab_input.Gl_certificateNo" />
+            </el-form-item>
+            <el-form-item label="gradingLabName:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Grading_lab_input.Gl_gradingLabName" />
+            </el-form-item>
+          </div>
+          <div v-show="userType == 'Jewelry maker'">
+            <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Jewelry_maker_input.Jm_diamondName" />
+            </el-form-item>
+            <el-form-item label="design:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Jewelry_maker_input.Jm_design" />
+            </el-form-item>
+            <el-form-item label="manufactureDate:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Jewelry_maker_input.Jm_manufactureDate" />
+            </el-form-item>
+            <el-form-item label="material:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Jewelry_maker_input.Jm_material" />
+            </el-form-item>
+            <el-form-item label="jewelerName:" style="width: 300px" label-width="120px">
+              <el-input v-model="tracedata.Jewelry_maker_input.Jm_jewelerName" />
+            </el-form-item>
+          </div>
         </div>
       </el-form>
       <span slot="footer" style="color: gray;" class="dialog-footer">
