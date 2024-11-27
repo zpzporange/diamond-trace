@@ -102,7 +102,9 @@ func GetDiamondHistory(c *gin.Context) {
 func buildArgs(c *gin.Context, miningcompany_traceability_code string) []string {
 	var args []string
 	userID, _ := c.Get("userID")
+	fmt.Print(userID)
 	userType, _ := pkg.ChaincodeQuery("GetUserType", userID.(string))
+	fmt.Print(userType)
 	args = append(args, userID.(string))
 	fmt.Print(userID)
 	// 种植户不需要输入溯源码，其他用户需要，通过雪花算法生成ID

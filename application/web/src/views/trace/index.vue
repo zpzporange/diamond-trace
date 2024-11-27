@@ -102,8 +102,8 @@
         </template>
       </el-table-column>
       <el-table-column label="Traceability code" prop="traceability_code" />
-      <el-table-column label="Diamond name" prop="Mining_company_input.fa_fruitName" />
-      <el-table-column label="Mining Time " prop="Mining_company_input.fa_pickingTime" />
+      <el-table-column label="Diamond name" prop="Mining_company_input.Mc_diamondName" />
+      <el-table-column label="Mining Time " prop="Mining_company_input.Mc_miningTime" />
     </el-table>
   </div>
 </template>
