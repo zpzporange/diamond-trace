@@ -29,7 +29,7 @@ func Register(c *gin.Context) {
 	args = append(args, user.UserID)
 	args = append(args, usertype)
 	args = append(args, user.RealInfo)
-	res, err := pkg.ChaincodeInvoke(usertype, "RegisterUser", args)
+	res, err := pkg.ChaincodeInvoke("RegisterUser", args)
 	if err != nil {
 		c.JSON(200, gin.H{
 			"message": "register failed：" + err.Error(),
