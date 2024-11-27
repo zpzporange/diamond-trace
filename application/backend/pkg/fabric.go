@@ -44,7 +44,9 @@ func ChaincodeInvoke(fcn string, args []string) (string, error) {
 	fmt.Println(contract)
 	defer conn.Close()
 	defer gw.Close()
+	fmt.Println(fcn)
 	submitResult, commit, err := contract.SubmitAsync(fcn, client.WithArguments(args...))
+	fmt.Println(submitResult)
 	if err != nil {
 		return "", fmt.Errorf("failed to submit transaction asynchronously: %w", err)
 	}

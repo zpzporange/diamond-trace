@@ -17,6 +17,7 @@ type SmartContract struct {
 
 // 注册用户
 func (s *SmartContract) RegisterUser(ctx contractapi.TransactionContextInterface, userID string, userType string, realInfoHash string) error {
+	fmt.Println("Register")
 	user := User{
 		UserID:       userID,
 		UserType:     userType,
@@ -36,6 +37,7 @@ func (s *SmartContract) RegisterUser(ctx contractapi.TransactionContextInterface
 
 // 农产品上链，传入用户ID、农产品上链信息
 func (s *SmartContract) Uplink(ctx contractapi.TransactionContextInterface, userID string, traceability_code string, arg1 string, arg2 string, arg3 string, arg4 string, arg5 string) (string, error) {
+	fmt.Println("Uplink")
 	// 获取用户类型
 	userType, err := s.GetUserType(ctx, userID)
 	fmt.Println(1)
@@ -149,6 +151,7 @@ func (s *SmartContract) Uplink(ctx contractapi.TransactionContextInterface, user
 
 // 添加农产品到用户的农产品列表
 func (s *SmartContract) AddDiamond(ctx contractapi.TransactionContextInterface, userID string, diamond *Diamond) error {
+	fmt.Println("AddDiamond")
 	userBytes, err := ctx.GetStub().GetState(userID)
 	if err != nil {
 		return fmt.Errorf("failed to read from world state: %v", err)
@@ -176,6 +179,7 @@ func (s *SmartContract) AddDiamond(ctx contractapi.TransactionContextInterface, 
 
 // 获取用户类型
 func (s *SmartContract) GetUserType(ctx contractapi.TransactionContextInterface, userID string) (string, error) {
+	fmt.Println("GetUserType")
 	userBytes, err := ctx.GetStub().GetState(userID)
 	if err != nil {
 		return "", fmt.Errorf("failed to read from world state: %v", err)
@@ -194,6 +198,7 @@ func (s *SmartContract) GetUserType(ctx contractapi.TransactionContextInterface,
 
 // 获取用户信息
 func (s *SmartContract) GetUserInfo(ctx contractapi.TransactionContextInterface, userID string) (*User, error) {
+	fmt.Println("GetUserInfo")
 	userBytes, err := ctx.GetStub().GetState(userID)
 	if err != nil {
 		return &User{}, fmt.Errorf("failed to read from world state: %v", err)
@@ -212,6 +217,7 @@ func (s *SmartContract) GetUserInfo(ctx contractapi.TransactionContextInterface,
 
 // 获取农产品的上链信息
 func (s *SmartContract) GetDiamondInfo(ctx contractapi.TransactionContextInterface, traceability_code string) (*Diamond, error) {
+	fmt.Println("GetDiamondInfo")
 	DiamondAsBytes, err := ctx.GetStub().GetState(traceability_code)
 	if err != nil {
 		return &Diamond{}, fmt.Errorf("failed to read from world state: %v", err)
@@ -233,6 +239,7 @@ func (s *SmartContract) GetDiamondInfo(ctx contractapi.TransactionContextInterfa
 
 // 获取用户的农产品ID列表
 func (s *SmartContract) GetDiamondList(ctx contractapi.TransactionContextInterface, userID string) ([]*Diamond, error) {
+	fmt.Println("GetDiamondList")
 	userBytes, err := ctx.GetStub().GetState(userID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read from world state: %v", err)
@@ -251,6 +258,7 @@ func (s *SmartContract) GetDiamondList(ctx contractapi.TransactionContextInterfa
 
 // 获取所有的农产品信息
 func (s *SmartContract) GetAllDiamondInfo(ctx contractapi.TransactionContextInterface) ([]Diamond, error) {
+	fmt.Println("GetAllDiamondInfo")
 	diamondListAsBytes, err := ctx.GetStub().GetStateByRange("", "")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read from world state: %v", err)
@@ -277,6 +285,7 @@ func (s *SmartContract) GetAllDiamondInfo(ctx contractapi.TransactionContextInte
 
 // 获取农产品上链历史
 func (s *SmartContract) GetDiamondHistory(ctx contractapi.TransactionContextInterface, traceability_code string) ([]HistoryQueryResult, error) {
+	fmt.Println("GetDiamondHistory")
 	log.Printf("GetAssetHistory: ID %v", traceability_code)
 
 	resultsIterator, err := ctx.GetStub().GetHistoryForKey(traceability_code)
