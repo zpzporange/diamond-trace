@@ -195,13 +195,13 @@ export default {
         if (res.code === 200) {
           loading.close()
           this.$message({
-            message: '上链成功，交易ID：' + res.txid + '\n溯源码：' + res.traceability_code,
+            message: 'Uplink success,TXID:' + res.txid + '\ntraceability_code:' + res.traceability_code,
             type: 'success'
           })
         } else {
           loading.close()
           this.$message({
-            message: '上链失败',
+            message: 'Uplink failed',
             type: 'error'
           })
         }
