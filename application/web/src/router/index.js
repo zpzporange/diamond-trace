@@ -165,7 +165,8 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'http://172.25.165.94:8080',
+        // path: 'http://172.25.165.94:8080',
+        path: 'http://8.218.105.89:8080',
         meta: { title: '区块链浏览器', icon: 'el-icon-discover' }
       }
     ]
