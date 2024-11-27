@@ -41,6 +41,7 @@ func ChaincodeQuery(fcn string, arg string) (string, error) {
 // 链码调用，返回交易ID
 func ChaincodeInvoke(fcn string, args []string) (string, error) {
 	contract, conn, gw := GetContract()
+	fmt.Println(contract)
 	defer conn.Close()
 	defer gw.Close()
 	submitResult, commit, err := contract.SubmitAsync(fcn, client.WithArguments(args...))
@@ -80,6 +81,7 @@ func GetContract() (*client.Contract, *grpc.ClientConn, *client.Gateway) {
 		client.WithSubmitTimeout(5*time.Second),
 		client.WithCommitStatusTimeout(1*time.Minute),
 	)
+	fmt.Println(1)
 	if err != nil {
 		panic(err)
 	}
@@ -87,17 +89,20 @@ func GetContract() (*client.Contract, *grpc.ClientConn, *client.Gateway) {
 
 	// Override default values for chaincode and channel name as they may differ in testing contexts.
 	chaincodeName := "trace"
+	fmt.Println(2)
 	if ccname := os.Getenv("CHAINCODE_NAME"); ccname != "" {
 		chaincodeName = ccname
 	}
 
 	channelName := "mychannel"
+	fmt.Println(3)
 	if cname := os.Getenv("CHANNEL_NAME"); cname != "" {
 		channelName = cname
 	}
+	fmt.Println(4)
 	network := gw.GetNetwork(channelName)
 	contract := network.GetContract(chaincodeName)
-
+	fmt.Println(5)
 	return contract, clientConnection, gw
 }
 

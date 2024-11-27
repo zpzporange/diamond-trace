@@ -19,7 +19,6 @@ func Uplink(c *gin.Context) {
 	if args == nil {
 		return
 	}
-	fmt.Println(args)
 	res, err := pkg.ChaincodeInvoke("Uplink", args)
 	if err != nil {
 		c.JSON(200, gin.H{
@@ -109,7 +108,6 @@ func buildArgs(c *gin.Context, miningcompany_traceability_code string) []string 
 	// 种植户不需要输入溯源码，其他用户需要，通过雪花算法生成ID
 	if userType == "Mining company" {
 		args = append(args, miningcompany_traceability_code)
-		fmt.Println(args)
 	} else {
 		// 检查溯源码是否正确
 		res, err := pkg.ChaincodeQuery("GetDiamondInfo", c.PostForm("traceability_code"))
