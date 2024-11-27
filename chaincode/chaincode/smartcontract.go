@@ -38,27 +38,35 @@ func (s *SmartContract) RegisterUser(ctx contractapi.TransactionContextInterface
 func (s *SmartContract) Uplink(ctx contractapi.TransactionContextInterface, userID string, traceability_code string, arg1 string, arg2 string, arg3 string, arg4 string, arg5 string) (string, error) {
 	// 获取用户类型
 	userType, err := s.GetUserType(ctx, userID)
+	fmt.Println(1)
 	if err != nil {
+		fmt.Println(11)
 		return "", fmt.Errorf("failed to get user type: %v", err)
 	}
 
 	// 通过溯源码获取农产品的上链信息
 	DiamondAsBytes, err := ctx.GetStub().GetState(traceability_code)
+	fmt.Println(2)
 	if err != nil {
+		fmt.Println(22)
 		return "", fmt.Errorf("failed to read from world state: %v", err)
 	}
 	// 将农产品的信息转换为Fruit结构体
 	var diamond Diamond
 	if DiamondAsBytes != nil {
+		fmt.Println(222)
 		err = json.Unmarshal(DiamondAsBytes, &diamond)
 		if err != nil {
+			fmt.Println(2222)
 			return "", fmt.Errorf("failed to unmarshal diamond: %v", err)
 		}
 	}
 
 	//获取时间戳,修正时区
 	txtime, err := ctx.GetStub().GetTxTimestamp()
+	fmt.Println(3)
 	if err != nil {
+		fmt.Println(33)
 		return "", fmt.Errorf("failed to read TxTimestamp: %v", err)
 	}
 	timeLocation, _ := time.LoadLocation("Asia/Hongkong") // 选择你所在的时区
@@ -115,17 +123,24 @@ func (s *SmartContract) Uplink(ctx contractapi.TransactionContextInterface, user
 
 	//将农产品的信息转换为json格式
 	diamondAsBytes, err := json.Marshal(diamond)
+	fmt.Println(diamondAsBytes)
+	fmt.Println(4)
 	if err != nil {
+		fmt.Println(44)
 		return "", fmt.Errorf("failed to marshal diamond: %v", err)
 	}
 	//将农产品的信息存入区块链
 	err = ctx.GetStub().PutState(traceability_code, diamondAsBytes)
+	fmt.Println(5)
 	if err != nil {
+		fmt.Println(55)
 		return "", fmt.Errorf("failed to put diamond: %v", err)
 	}
 	//将农产品存入用户的农产品列表
 	err = s.AddDiamond(ctx, userID, &diamond)
+	fmt.Println(6)
 	if err != nil {
+		fmt.Println(66)
 		return "", fmt.Errorf("failed to add diamond to user: %v", err)
 	}
 

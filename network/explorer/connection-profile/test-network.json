@@ -8,7 +8,7 @@
 			"password": "exploreradminpw"
 		},
 		"enableAuthentication": false,
-		"organization": "Org1MSP",
+		"organization": "MiningCompanyMSP",
 		"connection": {
 			"timeout": {
 				"peer": {
@@ -21,28 +21,30 @@
 	"channels": {
 		"mychannel": {
 			"peers": {
-				"peer0.org1.example.com": {}
+				"peer0.miningcompany.example.com": {}
 			}
 		}
 	},
 	"organizations": {
 		"Org1MSP": {
-			"mspid": "Org1MSP",
+			"mspid": "MiningCompanyMSP",
 			"adminPrivateKey": {
-				"path": "/tmp/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/priv_sk"
+				"path": "/tmp/crypto/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp/keystore/priv_sk"
 			},
-			"peers": ["peer0.org1.example.com"],
+			"peers": [
+				"peer0.miningcompany.example.com"
+			],
 			"signedCert": {
-				"path": "/tmp/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem"
+				"path": "/tmp/crypto/peerOrganizations/miningcompany.example.com/users/Admin@miningcompany.example.com/msp/signcerts/Admin@miningcompany.example.com-cert.pem"
 			}
 		}
 	},
 	"peers": {
-		"peer0.org1.example.com": {
+		"peer0.miningcompany.example.com": {
 			"tlsCACerts": {
-				"path": "/tmp/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+				"path": "/tmp/crypto/peerOrganizations/miningcompany.example.com/peers/peer0.miningcompany.example.com/tls/ca.crt"
 			},
-			"url": "grpcs://peer0.org1.example.com:7051"
+			"url": "grpcs://peer0.miningcompany.example.com:8051"
 		}
 	}
 }
