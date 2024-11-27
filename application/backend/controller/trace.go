@@ -14,11 +14,12 @@ func Uplink(c *gin.Context) {
 	// +--------------------------------------------------------------------------+
 	// | 1 Bit Unused | 41 Bit Timestamp |  10 Bit NodeID  |   12 Bit Sequence ID |
 	// +--------------------------------------------------------------------------+
-	farmer_traceability_code := pkg.GenerateID()[1:]
-	args := buildArgs(c, farmer_traceability_code)
+	miningcompany_traceability_code := pkg.GenerateID()[1:]
+	args := buildArgs(c, miningcompany_traceability_code)
 	if args == nil {
 		return
 	}
+	fmt.Println(args)
 	res, err := pkg.ChaincodeInvoke("Uplink", args)
 	if err != nil {
 		c.JSON(200, gin.H{
@@ -102,14 +103,13 @@ func GetDiamondHistory(c *gin.Context) {
 func buildArgs(c *gin.Context, miningcompany_traceability_code string) []string {
 	var args []string
 	userID, _ := c.Get("userID")
-	fmt.Print(userID)
+	fmt.Println(userID)
 	userType, _ := pkg.ChaincodeQuery("GetUserType", userID.(string))
-	fmt.Print(userType)
 	args = append(args, userID.(string))
-	fmt.Print(userID)
 	// 种植户不需要输入溯源码，其他用户需要，通过雪花算法生成ID
 	if userType == "Mining company" {
 		args = append(args, miningcompany_traceability_code)
+		fmt.Println(args)
 	} else {
 		// 检查溯源码是否正确
 		res, err := pkg.ChaincodeQuery("GetDiamondInfo", c.PostForm("traceability_code"))
@@ -127,5 +127,6 @@ func buildArgs(c *gin.Context, miningcompany_traceability_code string) []string 
 	args = append(args, c.PostForm("arg3"))
 	args = append(args, c.PostForm("arg4"))
 	args = append(args, c.PostForm("arg5"))
+	fmt.Println(args)
 	return args
 }

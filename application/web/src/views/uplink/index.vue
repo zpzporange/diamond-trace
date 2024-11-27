@@ -160,7 +160,6 @@ export default {
       })
       var formData = new FormData()
       formData.append('traceability_code', this.tracedata.traceability_code)
-      // 根据不同的用户给arg1、arg2、arg3..赋值,
       switch (this.userType) {
         case 'Mining company':
           formData.append('arg1', this.tracedata.Mining_company_input.Mc_diamondName);
