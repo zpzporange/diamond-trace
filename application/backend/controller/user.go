@@ -14,6 +14,7 @@ func Register(c *gin.Context) {
 	user.Username = c.PostForm("username")
 	user.Password = c.PostForm("password")
 	user.RealInfo = pkg.EncryptByMD5(c.PostForm("username"))
+	var usertype = c.PostForm("userType")
 	err := pkg.InsertUser(&user)
 	if err != nil {
 		c.JSON(200, gin.H{
@@ -26,9 +27,9 @@ func Register(c *gin.Context) {
 	// 将post请求的参数封装成一个数组args
 	var args []string
 	args = append(args, user.UserID)
-	args = append(args, c.PostForm("userType"))
+	args = append(args, usertype)
 	args = append(args, user.RealInfo)
-	res, err := pkg.ChaincodeInvoke("RegisterUser", args)
+	res, err := pkg.ChaincodeInvoke(usertype, "RegisterUser", args)
 	if err != nil {
 		c.JSON(200, gin.H{
 			"message": "register failed：" + err.Error(),

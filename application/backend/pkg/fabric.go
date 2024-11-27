@@ -5,7 +5,7 @@ import (
 	"crypto/x509"
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 	"time"
 
 	"github.com/hyperledger/fabric-gateway/pkg/client"
@@ -14,19 +14,53 @@ import (
 	"google.golang.org/grpc/credentials"
 )
 
+// MiningCompanyMSP constants
 const (
-	mspID        = "Org1MSP"
-	cryptoPath   = "../../blockchain/network/organizations/peerOrganizations/org1.example.com"
-	certPath     = cryptoPath + "/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem"
-	keyPath      = cryptoPath + "/users/User1@org1.example.com/msp/keystore/"
-	tlsCertPath  = cryptoPath + "/peers/peer0.org1.example.com/tls/ca.crt"
-	peerEndpoint = "localhost:7051"
-	gatewayPeer  = "peer0.org1.example.com"
+	MiningCompanyMSPID        = "MiningCompanyMSP"
+	MiningCompanyCryptoPath   = "../../network/organizations/peerOrganizations/miningcompany.example.com"
+	MiningCompanyCertPath     = MiningCompanyCryptoPath + "/users/User1@miningcompany.example.com/msp/signcerts/User1@miningcompany.example.com-cert.pem"
+	MiningCompanyKeyPath      = MiningCompanyCryptoPath + "/users/User1@miningcompany.example.com/msp/keystore/"
+	MiningCompanyTLSCertPath  = MiningCompanyCryptoPath + "/tlsca/tlsca.miningcompany.example.com-cert.pem"
+	MiningCompanyPeerEndpoint = "localhost:8051"
+	MiningCompanyGatewayPeer  = "peer0.miningcompany.example.com"
+)
+
+// CuttingCompanyMSP constants
+const (
+	CuttingCompanyMSPID        = "CuttingCompanyMSP"
+	CuttingCompanyCryptoPath   = "../../network/organizations/peerOrganizations/cuttingcompany.example.com"
+	CuttingCompanyCertPath     = CuttingCompanyCryptoPath + "/users/User1@cuttingcompany.example.com/msp/signcerts/User1@cuttingcompany.example.com-cert.pem"
+	CuttingCompanyKeyPath      = CuttingCompanyCryptoPath + "/users/User1@cuttingcompany.example.com/msp/keystore/"
+	CuttingCompanyTLSCertPath  = CuttingCompanyCryptoPath + "/tlsca/tlsca.cuttingcompany.example.com-cert.pem"
+	CuttingCompanyPeerEndpoint = "localhost:9051"
+	CuttingCompanyGatewayPeer  = "peer0.cuttingcompany.example.com"
+)
+
+// GradingLabMSP constants
+const (
+	GradingLabMSPID        = "GradingLabMSP"
+	GradingLabCryptoPath   = "../../network/organizations/peerOrganizations/gradinglab.example.com"
+	GradingLabCertPath     = GradingLabCryptoPath + "/users/User1@gradinglab.example.com/msp/signcerts/User1@gradinglab.example.com-cert.pem"
+	GradingLabKeyPath      = GradingLabCryptoPath + "/users/User1@gradinglab.example.com/msp/keystore/"
+	GradingLabTLSCertPath  = GradingLabCryptoPath + "/tlsca/tlsca.gradinglab.example.com-cert.pem"
+	GradingLabPeerEndpoint = "localhost:10051"
+	GradingLabGatewayPeer  = "peer0.gradinglab.example.com"
+)
+
+// JewelryMakerMSP constants
+const (
+	JewelryMakerMSPID        = "JewelryMakerMSP"
+	JewelryMakerCryptoPath   = "../../network/organizations/peerOrganizations/jewelrymaker.example.com"
+	JewelryMakerCertPath     = JewelryMakerCryptoPath + "/users/User1@jewelrymaker.example.com/msp/signcerts/User1@jewelrymaker.example.com-cert.pem"
+	JewelryMakerKeyPath      = JewelryMakerCryptoPath + "/users/User1@jewelrymaker.example.com/msp/keystore/"
+	JewelryMakerTLSCertPath  = JewelryMakerCryptoPath + "/tlsca/tlsca.jewelrymaker.example.com-cert.pem"
+	JewelryMakerPeerEndpoint = "localhost:11051"
+	JewelryMakerGatewayPeer  = "peer0.jewelrymaker.example.com"
 )
 
 // 链码查询
-func ChaincodeQuery(fcn string, arg string) (string, error) {
-	contract, conn, gw := GetContract()
+func ChaincodeQuery(org string, fcn string, arg string) (string, error) {
+	contract, conn, gw := GetContract(org)
 	defer conn.Close()
 	defer gw.Close()
 	evaluateResult, err := contract.EvaluateTransaction(fcn, arg)
@@ -35,12 +69,11 @@ func ChaincodeQuery(fcn string, arg string) (string, error) {
 	}
 	fmt.Printf("*** evaluateResult:%s\n", evaluateResult)
 	return string(evaluateResult), nil
-
 }
 
 // 链码调用，返回交易ID
-func ChaincodeInvoke(fcn string, args []string) (string, error) {
-	contract, conn, gw := GetContract()
+func ChaincodeInvoke(org string, fcn string, args []string) (string, error) {
+	contract, conn, gw := GetContract(org)
 	defer conn.Close()
 	defer gw.Close()
 	submitResult, commit, err := contract.SubmitAsync(fcn, client.WithArguments(args...))
@@ -58,16 +91,50 @@ func ChaincodeInvoke(fcn string, args []string) (string, error) {
 
 	fmt.Printf("*** Transaction committed successfully\n")
 	return commit.TransactionID(), nil
-
 }
 
-func GetContract() (*client.Contract, *grpc.ClientConn, *client.Gateway) {
+func GetContract(org string) (*client.Contract, *grpc.ClientConn, *client.Gateway) {
+	var mspID, certPath, keyPath, tlsCertPath, peerEndpoint, gatewayPeer string
+
+	switch org {
+	case "MiningCompany":
+		mspID = MiningCompanyMSPID
+		certPath = MiningCompanyCertPath
+		keyPath = MiningCompanyKeyPath
+		tlsCertPath = MiningCompanyTLSCertPath
+		peerEndpoint = MiningCompanyPeerEndpoint
+		gatewayPeer = MiningCompanyGatewayPeer
+	case "CuttingCompany":
+		mspID = CuttingCompanyMSPID
+		certPath = CuttingCompanyCertPath
+		keyPath = CuttingCompanyKeyPath
+		tlsCertPath = CuttingCompanyTLSCertPath
+		peerEndpoint = CuttingCompanyPeerEndpoint
+		gatewayPeer = CuttingCompanyGatewayPeer
+	case "GradingLab":
+		mspID = GradingLabMSPID
+		certPath = GradingLabCertPath
+		keyPath = GradingLabKeyPath
+		tlsCertPath = GradingLabTLSCertPath
+		peerEndpoint = GradingLabPeerEndpoint
+		gatewayPeer = GradingLabGatewayPeer
+	case "JewelryMaker":
+		mspID = JewelryMakerMSPID
+		certPath = JewelryMakerCertPath
+		keyPath = JewelryMakerKeyPath
+		tlsCertPath = JewelryMakerTLSCertPath
+		peerEndpoint = JewelryMakerPeerEndpoint
+		gatewayPeer = JewelryMakerGatewayPeer
+	default:
+		panic(fmt.Sprintf("Unknown organization: %s", org))
+	}
+
 	// The gRPC client connection should be shared by all Gateway connections to this endpoint
-	clientConnection := newGrpcConnection()
+	clientConnection := newGrpcConnection(tlsCertPath, peerEndpoint, gatewayPeer)
 	// defer clientConnection.Close()
 
-	id := newIdentity()
-	sign := newSign()
+	id := newIdentity(mspID, certPath)
+	sign := newSign(keyPath)
 
 	// Create a Gateway connection for a specific client identity
 	gw, err := client.Connect(
@@ -102,7 +169,7 @@ func GetContract() (*client.Contract, *grpc.ClientConn, *client.Gateway) {
 }
 
 // newIdentity creates a client identity for this Gateway connection using an X.509 certificate.
-func newIdentity() *identity.X509Identity {
+func newIdentity(mspID string, certPath string) *identity.X509Identity {
 	certificate, err := loadCertificate(certPath)
 	if err != nil {
 		panic(err)
@@ -117,12 +184,12 @@ func newIdentity() *identity.X509Identity {
 }
 
 // newSign creates a function that generates a digital signature from a message digest using a private key.
-func newSign() identity.Sign {
+func newSign(keyPath string) identity.Sign {
 	files, err := os.ReadDir(keyPath)
 	if err != nil {
 		panic(fmt.Errorf("failed to read private key directory: %w", err))
 	}
-	privateKeyPEM, err := os.ReadFile(path.Join(keyPath, files[0].Name()))
+	privateKeyPEM, err := os.ReadFile(filepath.Join(keyPath, files[0].Name()))
 
 	if err != nil {
 		panic(fmt.Errorf("failed to read private key file: %w", err))
@@ -142,7 +209,7 @@ func newSign() identity.Sign {
 }
 
 // newGrpcConnection creates a gRPC connection to the Gateway server.
-func newGrpcConnection() *grpc.ClientConn {
+func newGrpcConnection(tlsCertPath string, peerEndpoint string, gatewayPeer string) *grpc.ClientConn {
 	certificate, err := loadCertificate(tlsCertPath)
 	if err != nil {
 		panic(err)

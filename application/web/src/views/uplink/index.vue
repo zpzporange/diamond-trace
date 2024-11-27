@@ -6,15 +6,16 @@
     </div>
     <div>
       <el-form ref="form" :model="tracedata" label-width="80px" size="mini" style="">
-        <el-form-item v-show="userType!='Mining company'&userType!='Customer'" label="Traceability code:" style="width: 300px" label-width="120px">
+        <el-form-item v-show="userType != 'Mining company' & userType != 'Customer'" label="Traceability code:"
+          style="width: 300px" label-width="120px">
           <el-input v-model="tracedata.traceability_code" />
         </el-form-item>
 
-        <div v-show="userType=='Mining company'"><!-- 种植户 -->
+        <div v-show="userType == 'Mining company'"><!-- 种植户 -->
           <el-form-item label="Type of diamonds:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Farmer_input.Fa_fruitName" />
           </el-form-item>
-          <el-form-item label="Area of mining:" style="width: 300px" label-width="120px"> 
+          <el-form-item label="Area of mining:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Farmer_input.Fa_origin" />
           </el-form-item>
           <el-form-item label="种植时间:" style="width: 300px" label-width="120px">
@@ -27,7 +28,7 @@
             <el-input v-model="tracedata.Farmer_input.Fa_farmerName" />
           </el-form-item>
         </div>
-        <div v-show="userType=='Cutting company'"><!-- 工厂 -->
+        <div v-show="userType == 'Cutting company'"><!-- 工厂 -->
           <el-form-item label="Type of diamonds:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Factory_input.Fac_productName" />
           </el-form-item>
@@ -44,7 +45,7 @@
             <el-input v-model="tracedata.Factory_input.Fac_contactNumber" />
           </el-form-item>
         </div>
-        <div v-show="userType=='Grading lab'"><!-- 运输司机 -->
+        <div v-show="userType == 'Grading lab'"><!-- 运输司机 -->
           <el-form-item label="Name of lab:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Driver_input.Dr_name" />
           </el-form-item>
@@ -61,7 +62,7 @@
             <el-input v-model="tracedata.Driver_input.Dr_transport" />
           </el-form-item>
         </div>
-        <div v-show="userType=='Jewelry maker'"><!-- 珠宝商 -->
+        <div v-show="userType == 'Jewelry maker'"><!-- 珠宝商 -->
           <el-form-item label="Date of deposit:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Shop_input.Sh_storeTime" />
           </el-form-item>
@@ -80,7 +81,8 @@
         </div>
       </el-form>
       <span slot="footer" style="color: gray;" class="dialog-footer">
-        <el-button v-show="userType != 'Customer'" type="primary" plain style="margin-left: 220px;" @click="submittracedata()">提 交</el-button>
+        <el-button v-show="userType != 'Customer'" type="primary" plain style="margin-left: 220px;"
+          @click="submittracedata()">提 交</el-button>
       </span>
       <span v-show="userType == 'Customer'" slot="footer" style="color: gray;" class="dialog-footer">
         Consumers do not have permission to enter! Please use the traceability function!
@@ -208,6 +210,7 @@ export default {
   &-container {
     margin: 30px;
   }
+
   &-text {
     font-size: 30px;
     line-height: 46px;
