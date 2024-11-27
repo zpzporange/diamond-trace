@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">基于区块链的农产品溯源系统</h3>
+        <h3 class="title">Jewelry Traceability System</h3>
       </div>
       <div v-show="isLoginPage">
         <el-form-item prop="username">
@@ -13,7 +13,7 @@
           <el-input
             ref="username"
             v-model="loginForm.username"
-            placeholder="请输入账号"
+            placeholder="Please enter your account number"
             name="username"
             type="text"
             tabindex="1"
@@ -30,7 +30,7 @@
             ref="password"
             v-model="loginForm.password"
             :type="passwordType"
-            placeholder="请输入密码"
+            placeholder="Please enter your password"
             name="password"
             tabindex="2"
             auto-complete="on"
@@ -40,8 +40,8 @@
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
-        <el-button :loading="loading" type="info" style="width:20%;margin-bottom:30px;" @click="handleRegister">注册</el-button>
-        <el-button :loading="loading" type="primary" style="width:30%;margin-bottom:30px; float: right" @click.native.prevent="handleLogin">登录</el-button>
+        <el-button :loading="loading" type="info" style="width:20%;margin-bottom:30px;" @click="handleRegister">Register</el-button>
+        <el-button :loading="loading" type="primary" style="width:30%;margin-bottom:30px; float: right" @click.native.prevent="handleLogin">Login</el-button>
       </div>
       <div v-show="!isLoginPage">
         <el-form-item prop="username">
@@ -50,7 +50,7 @@
           </span>
           <el-input
             v-model="registerForm.username"
-            placeholder="请输入账号"
+            placeholder="Please enter your account number"
             name="username"
             type="text"
             auto-complete="on"
@@ -65,7 +65,7 @@
             ref="password"
             v-model="registerForm.password"
             :type="passwordType"
-            placeholder="请输入密码"
+            placeholder="Please enter your password"
             name="password"
             auto-complete="on"
             style="color: white !important;"
@@ -80,7 +80,7 @@
           </span>
           <el-input
             v-model="registerForm.password2"
-            placeholder="请再次输入密码"
+            placeholder="Please enter your password again"
             name="password"
             auto-complete="on"
             :type="passwordType"
@@ -90,7 +90,7 @@
           </span>
         </el-form-item>
         <el-form-item style="width: 200px">
-          <el-select v-model="registerForm.userType" placeholder="请选择角色">
+          <el-select v-model="registerForm.userType" placeholder="Character">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -99,8 +99,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-button :loading="loading" type="info" style="width:20%;margin-bottom:30px;" @click="handleRegister">返回</el-button>
-        <el-button :loading="loading" type="primary" style="width:30%;margin-bottom:30px; float: right" @click.native.prevent="submitRegister">提交注册</el-button>
+        <el-button :loading="loading" type="info" style="width:20%;margin-bottom:30px;" @click="handleRegister">Back</el-button>
+        <el-button :loading="loading" type="primary" style="width:30%;margin-bottom:30px; float: right" @click.native.prevent="submitRegister">Submit</el-button>
       </div>
       <!-- <div class="tips">
         <span style="margin-right:20px;">提示：可以放一些提示</span>
@@ -135,20 +135,20 @@ export default {
         userType: ''
       },
       options: [{
-        value: '种植户',
-        label: '种植户'
+        value: 'Mining company',//'种植户', 矿业公司
+        label: 'Mining company'//'种植户'
       }, {
-        value: '工厂',
-        label: '工厂'
+        value: 'Cutting company',//'工厂',  切割公司
+        label: 'Cutting company'//'工厂'
       }, {
-        value: '运输司机',
-        label: '运输司机'
+        value: 'Grading lab',//'运输司机',  分级实验室
+        label: 'Grading lab'//'运输司机'
       }, {
-        value: '商店',
-        label: '商店'
+        value: 'Jewelry maker',//'商店',  珠宝商
+        label: 'Jewelry maker'//'商店'
       }, {
-        value: '消费者',
-        label: '消费者'
+        value: 'Customer',//'消费者',
+        label: 'Customer'//'消费者'
       }]
     }
   },
@@ -186,12 +186,12 @@ export default {
     },
     submitRegister() {
       if (this.registerForm.password !== this.registerForm.password2) {
-        this.$message.error('两次密码不一致')
+        this.$message.error('Two passwords do not match')
         return
       }
       const loading = this.$loading({
         lock: true,
-        text: '注册中...',
+        text: 'Regitering...',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
@@ -199,7 +199,7 @@ export default {
         this.$router.push({ path: this.redirect || '/' })
         this.loading = false
         this.$message({
-          message: '注册成功，链上交易ID：' + response.txid,
+          message: 'Successful registration and on-chain transaction ID:' + response.txid,
           type: 'success'
         })
         loading.close()

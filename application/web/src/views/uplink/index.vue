@@ -6,46 +6,46 @@
     </div>
     <div>
       <el-form ref="form" :model="tracedata" label-width="80px" size="mini" style="">
-        <el-form-item v-show="userType!='种植户'&userType!='消费者'" label="溯源码:" style="width: 300px" label-width="120px">
+        <el-form-item v-show="userType!='Mining company'&userType!='Customer'" label="Traceability code:" style="width: 300px" label-width="120px">
           <el-input v-model="tracedata.traceability_code" />
         </el-form-item>
 
-        <div v-show="userType=='种植户'">
-          <el-form-item label="农产品名称:" style="width: 300px" label-width="120px">
+        <div v-show="userType=='Mining company'"><!-- 种植户 -->
+          <el-form-item label="Type of diamonds:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Farmer_input.Fa_fruitName" />
           </el-form-item>
-          <el-form-item label="产地:" style="width: 300px" label-width="120px">
+          <el-form-item label="Area of mining:" style="width: 300px" label-width="120px"> 
             <el-input v-model="tracedata.Farmer_input.Fa_origin" />
           </el-form-item>
           <el-form-item label="种植时间:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Farmer_input.Fa_plantTime" />
           </el-form-item>
-          <el-form-item label="采摘时间:" style="width: 300px" label-width="120px">
+          <el-form-item label="Date of mining:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Farmer_input.Fa_pickingTime" />
           </el-form-item>
-          <el-form-item label="种植户名称:" style="width: 300px" label-width="120px">
+          <el-form-item label="Name of company:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Farmer_input.Fa_farmerName" />
           </el-form-item>
         </div>
-        <div v-show="userType=='工厂'">
-          <el-form-item label="商品名称:" style="width: 300px" label-width="120px">
+        <div v-show="userType=='Cutting company'"><!-- 工厂 -->
+          <el-form-item label="Type of diamonds:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Factory_input.Fac_productName" />
           </el-form-item>
-          <el-form-item label="生产批次:" style="width: 300px" label-width="120px">
+          <el-form-item label="Batches of cutting:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Factory_input.Fac_productionbatch" />
           </el-form-item>
-          <el-form-item label="生产时间:" style="width: 300px" label-width="120px">
+          <el-form-item label="Date of cutting:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Factory_input.Fac_productionTime" />
           </el-form-item>
-          <el-form-item label="工厂名称与厂址:" style="width: 300px" label-width="120px">
+          <el-form-item label="Name of company:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Factory_input.Fac_factoryName" />
           </el-form-item>
           <el-form-item label="联系电话:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Factory_input.Fac_contactNumber" />
           </el-form-item>
         </div>
-        <div v-show="userType=='运输司机'">
-          <el-form-item label="姓名:" style="width: 300px" label-width="120px">
+        <div v-show="userType=='Grading lab'"><!-- 运输司机 -->
+          <el-form-item label="Name of lab:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Driver_input.Dr_name" />
           </el-form-item>
           <el-form-item label="年龄:" style="width: 300px" label-width="120px">
@@ -61,29 +61,29 @@
             <el-input v-model="tracedata.Driver_input.Dr_transport" />
           </el-form-item>
         </div>
-        <div v-show="userType=='商店'">
-          <el-form-item label="存入时间:" style="width: 300px" label-width="120px">
+        <div v-show="userType=='Jewelry maker'"><!-- 珠宝商 -->
+          <el-form-item label="Date of deposit:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Shop_input.Sh_storeTime" />
           </el-form-item>
-          <el-form-item label="销售时间:" style="width: 300px" label-width="120px">
+          <el-form-item label="Date of sale:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Shop_input.Sh_sellTime" />
           </el-form-item>
-          <el-form-item label="商店名称:" style="width: 300px" label-width="120px">
+          <el-form-item label="Name of Jewelry maker:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Shop_input.Sh_shopName" />
           </el-form-item>
-          <el-form-item label="商店位置:" style="width: 300px" label-width="120px">
+          <el-form-item label="Location of Jewelry maker:" style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Shop_input.Sh_shopAddress" />
           </el-form-item>
-          <el-form-item label="商店电话:" style="width: 300px" label-width="120px">
+          <el-form-item label="Tel." style="width: 300px" label-width="120px">
             <el-input v-model="tracedata.Shop_input.Sh_shopPhone" />
           </el-form-item>
         </div>
       </el-form>
       <span slot="footer" style="color: gray;" class="dialog-footer">
-        <el-button v-show="userType != '消费者'" type="primary" plain style="margin-left: 220px;" @click="submittracedata()">提 交</el-button>
+        <el-button v-show="userType != 'Customer'" type="primary" plain style="margin-left: 220px;" @click="submittracedata()">提 交</el-button>
       </span>
-      <span v-show="userType == '消费者'" slot="footer" style="color: gray;" class="dialog-footer">
-        消费者没有权限录入！请使用溯源功能!
+      <span v-show="userType == 'Customer'" slot="footer" style="color: gray;" class="dialog-footer">
+        Consumers do not have permission to enter! Please use the traceability function!
       </span>
     </div>
   </div>
