@@ -52,7 +52,7 @@ func (s *SmartContract) Uplink(ctx contractapi.TransactionContextInterface, user
 	if DiamondAsBytes != nil {
 		err = json.Unmarshal(DiamondAsBytes, &diamond)
 		if err != nil {
-			return "", fmt.Errorf("failed to unmarshal fruit: %v", err)
+			return "", fmt.Errorf("failed to unmarshal diamond: %v", err)
 		}
 	}
 
