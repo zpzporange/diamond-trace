@@ -53,13 +53,13 @@ Organizations:
         Rule: "OR('MiningCompanyMSP.admin', 'MiningCompanyMSP.peer', 'MiningCompanyMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('MiningCompanyMSP.admin', 'MiningCompanyMSP.client')"
+        Rule: "OR('MiningCompanyMSP.admin', 'MiningCompanyMSP.peer', 'MiningCompanyMSP.client')"
       Admins:
         Type: Signature
         Rule: "OR('MiningCompanyMSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('MiningCompanyMSP.peer')"
+        Rule: "OR('MiningCompanyMSP.admin', 'MiningCompanyMSP.peer', 'MiningCompanyMSP.client')"
 
   - &CuttingCompanyOrg # Cutting Company Org defines the organization which is used in the product traceability system
     Name: CuttingCompanyMSP
@@ -75,13 +75,13 @@ Organizations:
         Rule: "OR('CuttingCompanyMSP.admin', 'CuttingCompanyMSP.peer', 'CuttingCompanyMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('CuttingCompanyMSP.admin', 'CuttingCompanyMSP.client')"
+        Rule: "OR('CuttingCompanyMSP.admin', 'CuttingCompanyMSP.peer', 'CuttingCompanyMSP.client')"
       Admins:
         Type: Signature
         Rule: "OR('CuttingCompanyMSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('CuttingCompanyMSP.peer')"
+        Rule: "OR('CuttingCompanyMSP.admin', 'CuttingCompanyMSP.peer', 'CuttingCompanyMSP.client')"
 
   - &GradingLabOrg # Grading Lab Org defines the organization which is used in the product traceability system
     Name: GradingLabMSP
@@ -97,13 +97,13 @@ Organizations:
         Rule: "OR('GradingLabMSP.admin', 'GradingLabMSP.peer', 'GradingLabMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('GradingLabMSP.admin', 'GradingLabMSP.client')"
+        Rule: "OR('GradingLabMSP.admin', 'GradingLabMSP.peer', 'GradingLabMSP.client')"
       Admins:
         Type: Signature
         Rule: "OR('GradingLabMSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('GradingLabMSP.peer')"
+        Rule: "OR('GradingLabMSP.admin', 'GradingLabMSP.peer', 'GradingLabMSP.client')"
 
   - &JewelryMakerOrg # Jewelry Maker Org defines the organization which is used in the product traceability system
     Name: JewelryMakerMSP
@@ -119,13 +119,13 @@ Organizations:
         Rule: "OR('JewelryMakerMSP.admin', 'JewelryMakerMSP.peer', 'JewelryMakerMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('JewelryMakerMSP.admin', 'JewelryMakerMSP.client')"
+        Rule: "OR('JewelryMakerMSP.admin', 'JewelryMakerMSP.peer', 'JewelryMakerMSP.client')"
       Admins:
         Type: Signature
         Rule: "OR('JewelryMakerMSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('JewelryMakerMSP.peer')"
+        Rule: "OR('JewelryMakerMSP.admin', 'JewelryMakerMSP.peer', 'JewelryMakerMSP.client')"
 
 ################################################################################
 #

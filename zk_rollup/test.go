@@ -1,4 +1,4 @@
-package zkrollup
+package zk_rollup
 
 type Circuit interface {
 	// Define declares the circuit's Constraints
