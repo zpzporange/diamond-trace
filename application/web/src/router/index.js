@@ -166,6 +166,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'http://8.218.105.89:8080',
+
         meta: { title: '区块链浏览器', icon: 'el-icon-discover' }
       }
     ]
