@@ -11,25 +11,25 @@
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <div><span class="trace-text" style="color: #67C23A;">农产品信息</span></div>
-            <el-form-item label="农产品名称：">
+            <el-form-item label="DiamondName:">
               <span>{{ props.row.farmer_input.fa_fruitName }}</span>
             </el-form-item>
-            <el-form-item label="产地：">
+            <el-form-item label="Miner:">
               <span>{{ props.row.farmer_input.fa_origin }}</span>
             </el-form-item>
-            <el-form-item label="种植时间：">
+            <el-form-item label="MiningLocation:">
               <span>{{ props.row.farmer_input.fa_plantTime }}</span>
             </el-form-item>
-            <el-form-item label="采摘时间：">
+            <el-form-item label="MiningTime:">
               <span>{{ props.row.farmer_input.fa_pickingTime }}</span>
             </el-form-item>
-            <el-form-item label="种植户名称：">
+            <el-form-item label="CompanyName:">
               <span>{{ props.row.farmer_input.fa_farmerName }}</span>
             </el-form-item>
-            <el-form-item label="区块链交易ID：">
+            <el-form-item label="BlockchainTxID:">
               <span>{{ props.row.farmer_input.fa_txid }}</span>
             </el-form-item>
-            <el-form-item label="区块链交易时间：">
+            <el-form-item label="BlockchainTxTime:">
               <span>{{ props.row.farmer_input.fa_timestamp }}</span>
             </el-form-item>
             <div><span class="trace-text" style="color: #409EFF;">工厂信息</span></div>
