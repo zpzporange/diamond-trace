@@ -10,107 +10,107 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
-            <div><span class="trace-text" style="color: #67C23A;">农产品信息</span></div>
-            <el-form-item label="农产品名称：">
+            <div><span class="trace-text" style="color: #67C23A;">Mining_Company_Info</span></div>
+            <el-form-item label="DiamondName：">
               <span>{{ props.row.farmer_input.fa_fruitName }}</span>
             </el-form-item>
-            <el-form-item label="产地：">
+            <el-form-item label="Miner：">
               <span>{{ props.row.farmer_input.fa_origin }}</span>
             </el-form-item>
-            <el-form-item label="种植时间：">
+            <el-form-item label="MiningLocation：">
               <span>{{ props.row.farmer_input.fa_plantTime }}</span>
             </el-form-item>
-            <el-form-item label="采摘时间：">
+            <el-form-item label="MiningTime：">
               <span>{{ props.row.farmer_input.fa_pickingTime }}</span>
             </el-form-item>
-            <el-form-item label="种植户名称：">
+            <el-form-item label="CompanyName：">
               <span>{{ props.row.farmer_input.fa_farmerName }}</span>
             </el-form-item>
-            <el-form-item label="区块链交易ID：">
+            <el-form-item label="BlockchainTxID：">
               <span>{{ props.row.farmer_input.fa_txid }}</span>
             </el-form-item>
-            <el-form-item label="区块链交易时间：">
+            <el-form-item label="BlockchainTxTime：">
               <span>{{ props.row.farmer_input.fa_timestamp }}</span>
             </el-form-item>
-            <div><span class="trace-text" style="color: #409EFF;">工厂信息</span></div>
-            <el-form-item label="商品名称：">
+            <div><span class="trace-text" style="color: #409EFF;">Cutting_Company_Info</span></div>
+            <el-form-item label="DiamondName：">
               <span>{{ props.row.factory_input.fac_productName }}</span>
             </el-form-item>
-            <el-form-item label="生产批次：">
+            <el-form-item label="utTime：">
               <span>{{ props.row.factory_input.fac_productionbatch }}</span>
             </el-form-item>
-            <el-form-item label="生产时间：">
+            <el-form-item label="Shape：">
               <span>{{ props.row.factory_input.fac_productionTime }}</span>
             </el-form-item>
-            <el-form-item label="工厂名称与厂址：">
+            <el-form-item label="Weight：">
               <span>{{ props.row.factory_input.fac_factoryName }}</span>
             </el-form-item>
-            <el-form-item label="联系电话：">
+            <el-form-item label="CompanyName：">
               <span>{{ props.row.factory_input.fac_contactNumber }}</span>
             </el-form-item>
-            <el-form-item label="区块链交易ID：">
+            <el-form-item label="BlockchainTxID：">
               <span>{{ props.row.factory_input.fac_txid }}</span>
             </el-form-item>
-            <el-form-item label="区块链交易时间：">
+            <el-form-item label="BlockchainTxTime：">
               <span>{{ props.row.factory_input.fac_timestamp }}</span>
             </el-form-item>
-            <div><span class="trace-text" style="color: #E6A23C;">物流轨迹信息</span></div>
-            <el-form-item label="姓名：">
+            <div><span class="trace-text" style="color: #E6A23C;">Grading_Lab_Info</span></div>
+            <el-form-item label="DiamondName：">
               <span>{{ props.row.driver_input.dr_name }}</span>
             </el-form-item>
-            <el-form-item label="年龄：">
+            <el-form-item label="CaratWeight：">
               <span>{{ props.row.driver_input.dr_age }}</span>
             </el-form-item>
-            <el-form-item label="联系电话：">
+            <el-form-item label="Quality：">
               <span>{{ props.row.driver_input.dr_phone }}</span>
             </el-form-item>
-            <el-form-item label="车牌号：">
+            <el-form-item label="CertificateNo：">
               <span>{{ props.row.driver_input.dr_carNumber }}</span>
             </el-form-item>
-            <el-form-item label="运输记录：">
+            <el-form-item label="GradingLabName：">
               <span>{{ props.row.driver_input.dr_transport }}</span>
             </el-form-item>
-            <el-form-item label="区块链交易ID：">
+            <el-form-item label="BlockchainTxID：">
               <span>{{ props.row.driver_input.dr_txid }}</span>
             </el-form-item>
-            <el-form-item label="区块链交易时间：">
+            <el-form-item label="BlockchainTxTime：">
               <span>{{ props.row.driver_input.dr_timestamp }}</span>
             </el-form-item>
-            <div><span class="trace-text" style="color: #909399;">商店信息</span></div>
-            <el-form-item label="入库时间：">
+            <div><span class="trace-text" style="color: #909399;">Jewelry_Maker_Info</span></div>
+            <el-form-item label="DiamondName">
               <span>{{ props.row.shop_input.sh_storeTime }}</span>
             </el-form-item>
-            <el-form-item label="销售时间：">
+            <el-form-item label="Design：">
               <span>{{ props.row.shop_input.sh_sellTime }}</span>
             </el-form-item>
-            <el-form-item label="商店名称：">
+            <el-form-item label="ManufactureDate：">
               <span>{{ props.row.shop_input.sh_shopName }}</span>
             </el-form-item>
-            <el-form-item label="商店位置：">
+            <el-form-item label="Material：">
               <span>{{ props.row.shop_input.sh_shopAddress }}</span>
             </el-form-item>
-            <el-form-item label="商店电话：">
+            <el-form-item label="JewelerName：">
               <span>{{ props.row.shop_input.sh_shopPhone }}</span>
             </el-form-item>
-            <el-form-item label="区块链交易ID：">
+            <el-form-item label="BlockchainTxID：">
               <span>{{ props.row.shop_input.sh_txid }}</span>
             </el-form-item>
-            <el-form-item label="区块链交易时间：">
+            <el-form-item label="BlockchainTxTime：">
               <span>{{ props.row.shop_input.sh_timestamp }}</span>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
       <el-table-column
-        label="溯源码"
+        label="traceability_code"
         prop="traceability_code"
       />
       <el-table-column
-        label="农产品名称"
+        label="DiamondName"
         prop="farmer_input.fa_fruitName"
       />
       <el-table-column
-        label="农产品采摘时间"
+        label="MiningTime"
         prop="farmer_input.fa_pickingTime"
       />
     </el-table>
