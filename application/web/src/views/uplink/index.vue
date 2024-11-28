@@ -6,7 +6,7 @@
     </div>
     <div>
       <el-form ref="form" :model="tracedata" label-width="80px" size="mini" style="">
-        <el-form-item v-show="userType!='Mining_Company'&userType!='Customer'" label="Trace_code:" style="width: 300px" label-width="120px">
+        <el-form-item v-show="userType!='Mining_Company'&userType!='Customer'" label="traceability_code:" style="width: 300px" label-width="120px">
           <el-input v-model="tracedata.traceability_code" />
         </el-form-item>
 
