@@ -11,91 +11,91 @@
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <div><span class="trace-text" style="color: #67C23A;">Mining_Company_Info</span></div>
-            <el-form-item label="DiamondName：">
+            <el-form-item label="DiamondName:">
               <span>{{ props.row.farmer_input.fa_fruitName }}</span>
             </el-form-item>
-            <el-form-item label="Miner：">
+            <el-form-item label="Miner:">
               <span>{{ props.row.farmer_input.fa_origin }}</span>
             </el-form-item>
-            <el-form-item label="MiningLocation：">
+            <el-form-item label="MiningLocation:">
               <span>{{ props.row.farmer_input.fa_plantTime }}</span>
             </el-form-item>
-            <el-form-item label="MiningTime：">
+            <el-form-item label="MiningTime:">
               <span>{{ props.row.farmer_input.fa_pickingTime }}</span>
             </el-form-item>
-            <el-form-item label="CompanyName：">
+            <el-form-item label="CompanyName:">
               <span>{{ props.row.farmer_input.fa_farmerName }}</span>
             </el-form-item>
-            <el-form-item label="BlockchainTxID：">
+            <el-form-item label="BlockchainTxID:">
               <span>{{ props.row.farmer_input.fa_txid }}</span>
             </el-form-item>
-            <el-form-item label="BlockchainTxTime：">
+            <el-form-item label="BlockchainTxTime:">
               <span>{{ props.row.farmer_input.fa_timestamp }}</span>
             </el-form-item>
             <div><span class="trace-text" style="color: #409EFF;">Cutting_Company_Info</span></div>
-            <el-form-item label="DiamondName：">
+            <el-form-item label="DiamondName:">
               <span>{{ props.row.factory_input.fac_productName }}</span>
             </el-form-item>
-            <el-form-item label="utTime：">
+            <el-form-item label="utTime:">
               <span>{{ props.row.factory_input.fac_productionbatch }}</span>
             </el-form-item>
-            <el-form-item label="Shape：">
+            <el-form-item label="Shape:">
               <span>{{ props.row.factory_input.fac_productionTime }}</span>
             </el-form-item>
-            <el-form-item label="Weight：">
+            <el-form-item label="Weight:">
               <span>{{ props.row.factory_input.fac_factoryName }}</span>
             </el-form-item>
-            <el-form-item label="CompanyName：">
+            <el-form-item label="CompanyName:">
               <span>{{ props.row.factory_input.fac_contactNumber }}</span>
             </el-form-item>
-            <el-form-item label="BlockchainTxID：">
+            <el-form-item label="BlockchainTxID:">
               <span>{{ props.row.factory_input.fac_txid }}</span>
             </el-form-item>
-            <el-form-item label="BlockchainTxTime：">
+            <el-form-item label="BlockchainTxTime:">
               <span>{{ props.row.factory_input.fac_timestamp }}</span>
             </el-form-item>
             <div><span class="trace-text" style="color: #E6A23C;">Grading_Lab_Info</span></div>
-            <el-form-item label="DiamondName：">
+            <el-form-item label="DiamondName:">
               <span>{{ props.row.driver_input.dr_name }}</span>
             </el-form-item>
-            <el-form-item label="CaratWeight：">
+            <el-form-item label="CaratWeight:">
               <span>{{ props.row.driver_input.dr_age }}</span>
             </el-form-item>
-            <el-form-item label="Quality：">
+            <el-form-item label="Quality:">
               <span>{{ props.row.driver_input.dr_phone }}</span>
             </el-form-item>
-            <el-form-item label="CertificateNo：">
+            <el-form-item label="CertificateNo:">
               <span>{{ props.row.driver_input.dr_carNumber }}</span>
             </el-form-item>
-            <el-form-item label="GradingLabName：">
+            <el-form-item label="GradingLabName:">
               <span>{{ props.row.driver_input.dr_transport }}</span>
             </el-form-item>
-            <el-form-item label="BlockchainTxID：">
+            <el-form-item label="BlockchainTxID:">
               <span>{{ props.row.driver_input.dr_txid }}</span>
             </el-form-item>
-            <el-form-item label="BlockchainTxTime：">
+            <el-form-item label="BlockchainTxTime:">
               <span>{{ props.row.driver_input.dr_timestamp }}</span>
             </el-form-item>
             <div><span class="trace-text" style="color: #909399;">Jewelry_Maker_Info</span></div>
             <el-form-item label="DiamondName">
               <span>{{ props.row.shop_input.sh_storeTime }}</span>
             </el-form-item>
-            <el-form-item label="Design：">
+            <el-form-item label="Design:">
               <span>{{ props.row.shop_input.sh_sellTime }}</span>
             </el-form-item>
-            <el-form-item label="ManufactureDate：">
+            <el-form-item label="ManufactureDate:">
               <span>{{ props.row.shop_input.sh_shopName }}</span>
             </el-form-item>
-            <el-form-item label="Material：">
+            <el-form-item label="Material:">
               <span>{{ props.row.shop_input.sh_shopAddress }}</span>
             </el-form-item>
-            <el-form-item label="JewelerName：">
+            <el-form-item label="JewelerName:">
               <span>{{ props.row.shop_input.sh_shopPhone }}</span>
             </el-form-item>
-            <el-form-item label="BlockchainTxID：">
+            <el-form-item label="BlockchainTxID:">
               <span>{{ props.row.shop_input.sh_txid }}</span>
             </el-form-item>
-            <el-form-item label="BlockchainTxTime：">
+            <el-form-item label="BlockchainTxTime:">
               <span>{{ props.row.shop_input.sh_timestamp }}</span>
             </el-form-item>
           </el-form>
