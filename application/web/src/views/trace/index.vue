@@ -1,8 +1,8 @@
 <template>
   <div class="trace-container">
-    <el-input v-model="input" placeholder="请输入溯源码查询" style="width: 300px;margin-right: 15px;" />
-    <el-button type="primary" plain @click="FruitInfo"> 查询 </el-button>
-    <el-button type="success" plain @click="AllFruitInfo"> 获取所有农产品信息 </el-button>
+    <el-input v-model="input" placeholder="Query" style="width: 300px;margin-right: 15px;" />
+    <el-button type="primary" plain @click="FruitInfo"> Query </el-button>
+    <el-button type="success" plain @click="AllFruitInfo"> Get all info </el-button>
     <el-table
       :data="tracedata"
       style="width: 100%"
