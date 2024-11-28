@@ -14,15 +14,15 @@ func Uplink(c *gin.Context) {
 	// +--------------------------------------------------------------------------+
 	// | 1 Bit Unused | 41 Bit Timestamp |  10 Bit NodeID  |   12 Bit Sequence ID |
 	// +--------------------------------------------------------------------------+
-	miningcompany_traceability_code := pkg.GenerateID()[1:]
-	args := buildArgs(c, miningcompany_traceability_code)
+	farmer_traceability_code := pkg.GenerateID()[1:]
+	args := buildArgs(c, farmer_traceability_code)
 	if args == nil {
 		return
 	}
 	res, err := pkg.ChaincodeInvoke("Uplink", args)
 	if err != nil {
 		c.JSON(200, gin.H{
-			"message": "uplink failed " + err.Error(),
+			"message": "uplink failed" + err.Error(),
 		})
 		return
 	}
@@ -35,8 +35,8 @@ func Uplink(c *gin.Context) {
 }
 
 // 获取农产品的上链信息
-func GetDiamondInfo(c *gin.Context) {
-	res, err := pkg.ChaincodeQuery("GetDiamondInfo", c.PostForm("traceability_code"))
+func GetFruitInfo(c *gin.Context) {
+	res, err := pkg.ChaincodeQuery("GetFruitInfo", c.PostForm("traceability_code"))
 	if err != nil {
 		c.JSON(200, gin.H{
 			"message": "查询失败：" + err.Error(),
@@ -52,9 +52,9 @@ func GetDiamondInfo(c *gin.Context) {
 }
 
 // 获取用户的农产品ID列表
-func GetDiamondList(c *gin.Context) {
+func GetFruitList(c *gin.Context) {
 	userID, _ := c.Get("userID")
-	res, err := pkg.ChaincodeQuery("GetDiamondList", userID.(string))
+	res, err := pkg.ChaincodeQuery("GetFruitList", userID.(string))
 	if err != nil {
 		c.JSON(200, gin.H{
 			"message": "query failed" + err.Error(),
@@ -68,8 +68,8 @@ func GetDiamondList(c *gin.Context) {
 }
 
 // 获取所有的农产品信息
-func GetAllDiamondInfo(c *gin.Context) {
-	res, err := pkg.ChaincodeQuery("GetAllDiamondInfo", "")
+func GetAllFruitInfo(c *gin.Context) {
+	res, err := pkg.ChaincodeQuery("GetAllFruitInfo", "")
 	fmt.Print("res", res)
 	if err != nil {
 		c.JSON(200, gin.H{
@@ -85,8 +85,8 @@ func GetAllDiamondInfo(c *gin.Context) {
 
 // 获取农产品上链历史
 // func (s *SmartContract) GetFruitHistory(ctx contractapi.TransactionContextInterface, traceability_code string) ([]HistoryQueryResult, error) {
-func GetDiamondHistory(c *gin.Context) {
-	res, err := pkg.ChaincodeQuery("GetDiamondHistory", c.PostForm("traceability_code"))
+func GetFruitHistory(c *gin.Context) {
+	res, err := pkg.ChaincodeQuery("GetFruitHistory", c.PostForm("traceability_code"))
 	if err != nil {
 		c.JSON(200, gin.H{
 			"message": "query failed" + err.Error(),
@@ -99,18 +99,18 @@ func GetDiamondHistory(c *gin.Context) {
 	})
 }
 
-func buildArgs(c *gin.Context, miningcompany_traceability_code string) []string {
+func buildArgs(c *gin.Context, farmer_traceability_code string) []string {
 	var args []string
 	userID, _ := c.Get("userID")
-	fmt.Println(userID)
 	userType, _ := pkg.ChaincodeQuery("GetUserType", userID.(string))
 	args = append(args, userID.(string))
+	fmt.Print(userID)
 	// 种植户不需要输入溯源码，其他用户需要，通过雪花算法生成ID
-	if userType == "Mining company" {
-		args = append(args, miningcompany_traceability_code)
+	if userType == "种植户" {
+		args = append(args, farmer_traceability_code)
 	} else {
 		// 检查溯源码是否正确
-		res, err := pkg.ChaincodeQuery("GetDiamondInfo", c.PostForm("traceability_code"))
+		res, err := pkg.ChaincodeQuery("GetFruitInfo", c.PostForm("traceability_code"))
 		if res == "" || err != nil || len(c.PostForm("traceability_code")) != 18 {
 			c.JSON(200, gin.H{
 				"message": "请检查溯源码是否正确!!",
@@ -125,6 +125,5 @@ func buildArgs(c *gin.Context, miningcompany_traceability_code string) []string 
 	args = append(args, c.PostForm("arg3"))
 	args = append(args, c.PostForm("arg4"))
 	args = append(args, c.PostForm("arg5"))
-	fmt.Println(args)
 	return args
 }

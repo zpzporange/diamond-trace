@@ -12,9 +12,9 @@ export function uplink(data) {
 }
 
 // getFruitInfo
-export function getDiamondInfo(data) {
+export function getFruitInfo(data) {
   return request({
-    url: '/getDiamondInfo',
+    url: '/getFruitInfo',
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data'
@@ -24,9 +24,9 @@ export function getDiamondInfo(data) {
 }
 
 // getFruitList
-export function getDiamondList(data) {
+export function getFruitList(data) {
   return request({
-    url: '/getDiamondList',
+    url: '/getFruitList',
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data'
@@ -36,9 +36,9 @@ export function getDiamondList(data) {
 }
 
 // getAllFruitInfo
-export function getAllDiamondInfo(data) {
+export function getAllFruitInfo(data) {
   return request({
-    url: '/getAllDiamondInfo',
+    url: '/getAllFruitInfo',
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data'
@@ -48,9 +48,9 @@ export function getAllDiamondInfo(data) {
 }
 
 // getFruitHistory
-export function getDiamondHistory(data) {
+export function getFruitHistory(data) {
   return request({
-    url: '/getDiamondHistory',
+    url: '/getFruitHistory',
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data'

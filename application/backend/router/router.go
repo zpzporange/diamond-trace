@@ -45,12 +45,12 @@ func SetupRouter() *gin.Engine {
 	//农产品上链
 	r.POST("/uplink", middleware.JWTAuthMiddleware(), con.Uplink)
 	// 获取农产品的上链信息
-	r.POST("/getDiamondInfo", con.GetDiamondInfo)
+	r.POST("/getFruitInfo", con.GetFruitInfo)
 	// 获取用户的农产品ID列表
-	r.POST("/getDiamondList", middleware.JWTAuthMiddleware(), con.GetDiamondList)
+	r.POST("/getFruitList", middleware.JWTAuthMiddleware(), con.GetFruitList)
 	// 获取所有的农产品信息
-	r.POST("/getAllDiamondInfo", middleware.JWTAuthMiddleware(), con.GetAllDiamondInfo)
+	r.POST("/getAllFruitInfo", middleware.JWTAuthMiddleware(), con.GetAllFruitInfo)
 	// 获取农产品上链历史(溯源)
-	r.POST("/getFruitHistory", middleware.JWTAuthMiddleware(), con.GetDiamondHistory)
+	r.POST("/getFruitHistory", middleware.JWTAuthMiddleware(), con.GetFruitHistory)
 	return r
 }

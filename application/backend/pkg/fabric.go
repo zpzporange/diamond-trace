@@ -15,13 +15,13 @@ import (
 )
 
 const (
-	mspID        = "MiningCompanyMSP"
-	cryptoPath   = "../../network/organizations/peerOrganizations/miningcompany.example.com"
-	certPath     = cryptoPath + "/users/User1@miningcompany.example.com/msp/signcerts/User1@miningcompany.example.com-cert.pem"
-	keyPath      = cryptoPath + "/users/User1@miningcompany.example.com/msp/keystore/"
-	tlsCertPath  = cryptoPath + "/tlsca/tlsca.miningcompany.example.com-cert.pem"
-	peerEndpoint = "localhost:8051"
-	gatewayPeer  = "peer0.miningcompany.example.com"
+	mspID        = "Org1MSP"
+	cryptoPath   = "../../blockchain/network/organizations/peerOrganizations/org1.example.com"
+	certPath     = cryptoPath + "/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem"
+	keyPath      = cryptoPath + "/users/User1@org1.example.com/msp/keystore/"
+	tlsCertPath  = cryptoPath + "/peers/peer0.org1.example.com/tls/ca.crt"
+	peerEndpoint = "localhost:7051"
+	gatewayPeer  = "peer0.org1.example.com"
 )
 
 // 链码查询
@@ -41,12 +41,9 @@ func ChaincodeQuery(fcn string, arg string) (string, error) {
 // 链码调用，返回交易ID
 func ChaincodeInvoke(fcn string, args []string) (string, error) {
 	contract, conn, gw := GetContract()
-	fmt.Println(contract)
 	defer conn.Close()
 	defer gw.Close()
-	fmt.Println(fcn)
 	submitResult, commit, err := contract.SubmitAsync(fcn, client.WithArguments(args...))
-	fmt.Println(submitResult)
 	if err != nil {
 		return "", fmt.Errorf("failed to submit transaction asynchronously: %w", err)
 	}
@@ -83,7 +80,6 @@ func GetContract() (*client.Contract, *grpc.ClientConn, *client.Gateway) {
 		client.WithSubmitTimeout(5*time.Second),
 		client.WithCommitStatusTimeout(1*time.Minute),
 	)
-
 	if err != nil {
 		panic(err)
 	}
@@ -99,7 +95,6 @@ func GetContract() (*client.Contract, *grpc.ClientConn, *client.Gateway) {
 	if cname := os.Getenv("CHANNEL_NAME"); cname != "" {
 		channelName = cname
 	}
-
 	network := gw.GetNetwork(channelName)
 	contract := network.GetContract(chaincodeName)
 

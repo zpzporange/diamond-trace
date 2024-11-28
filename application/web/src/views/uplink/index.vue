@@ -1,93 +1,89 @@
 <template>
   <div class="uplink-container">
     <div style="color:#909399;margin-bottom: 30px">
-      Active user：{{ name }};
-      User type: {{ userType }}
+      当前用户：{{ name }};
+      用户角色: {{ userType }}
     </div>
     <div>
       <el-form ref="form" :model="tracedata" label-width="80px" size="mini" style="">
-        <el-form-item v-show="userType != 'Mining company' & userType != 'Customer'" label="Traceability code:"
-          style="width: 300px" label-width="120px">
+        <el-form-item v-show="userType!='种植户'&userType!='消费者'" label="溯源码:" style="width: 300px" label-width="120px">
           <el-input v-model="tracedata.traceability_code" />
         </el-form-item>
 
-        <div>
-          <div v-show="userType == 'Mining company'">
-            <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Mining_company_input.Mc_diamondName" />
-            </el-form-item>
-            <el-form-item label="miner:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Mining_company_input.Mc_miner" />
-            </el-form-item>
-            <el-form-item label="miningLocation:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Mining_company_input.Mc_miningLocation" />
-            </el-form-item>
-            <el-form-item label="miningTime:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Mining_company_input.Mc_miningTime" />
-            </el-form-item>
-            <el-form-item label="companyName:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Mining_company_input.Mc_companyName" />
-            </el-form-item>
-          </div>
-          <div v-show="userType == 'Cutting company'">
-            <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Cutting_company_input.Cc_diamondName" />
-            </el-form-item>
-            <el-form-item label="cutTime:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Cutting_company_input.Cc_cutTime" />
-            </el-form-item>
-            <el-form-item label="shape:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Cutting_company_input.Cc_shape" />
-            </el-form-item>
-            <el-form-item label="weight:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Cutting_company_input.Cc_weight" />
-            </el-form-item>
-            <el-form-item label="companyName:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Cutting_company_input.Cc_companyName" />
-            </el-form-item>
-          </div>
-          <div v-show="userType == 'Grading lab'">
-            <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Grading_lab_input.Gl_diamondName" />
-            </el-form-item>
-            <el-form-item label="caratWeight:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Grading_lab_input.Gl_caratWeight" />
-            </el-form-item>
-            <el-form-item label="quality:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Grading_lab_input.Gl_quality" />
-            </el-form-item>
-            <el-form-item label="certificateNo:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Grading_lab_input.Gl_certificateNo" />
-            </el-form-item>
-            <el-form-item label="gradingLabName:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Grading_lab_input.Gl_gradingLabName" />
-            </el-form-item>
-          </div>
-          <div v-show="userType == 'Jewelry maker'">
-            <el-form-item label="diamondName:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Jewelry_maker_input.Jm_diamondName" />
-            </el-form-item>
-            <el-form-item label="design:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Jewelry_maker_input.Jm_design" />
-            </el-form-item>
-            <el-form-item label="manufactureDate:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Jewelry_maker_input.Jm_manufactureDate" />
-            </el-form-item>
-            <el-form-item label="material:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Jewelry_maker_input.Jm_material" />
-            </el-form-item>
-            <el-form-item label="jewelerName:" style="width: 300px" label-width="120px">
-              <el-input v-model="tracedata.Jewelry_maker_input.Jm_jewelerName" />
-            </el-form-item>
-          </div>
+        <div v-show="userType=='种植户'">
+          <el-form-item label="农产品名称:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Farmer_input.Fa_fruitName" />
+          </el-form-item>
+          <el-form-item label="产地:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Farmer_input.Fa_origin" />
+          </el-form-item>
+          <el-form-item label="种植时间:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Farmer_input.Fa_plantTime" />
+          </el-form-item>
+          <el-form-item label="采摘时间:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Farmer_input.Fa_pickingTime" />
+          </el-form-item>
+          <el-form-item label="种植户名称:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Farmer_input.Fa_farmerName" />
+          </el-form-item>
+        </div>
+        <div v-show="userType=='工厂'">
+          <el-form-item label="商品名称:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Factory_input.Fac_productName" />
+          </el-form-item>
+          <el-form-item label="生产批次:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Factory_input.Fac_productionbatch" />
+          </el-form-item>
+          <el-form-item label="生产时间:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Factory_input.Fac_productionTime" />
+          </el-form-item>
+          <el-form-item label="工厂名称与厂址:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Factory_input.Fac_factoryName" />
+          </el-form-item>
+          <el-form-item label="联系电话:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Factory_input.Fac_contactNumber" />
+          </el-form-item>
+        </div>
+        <div v-show="userType=='运输司机'">
+          <el-form-item label="姓名:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Driver_input.Dr_name" />
+          </el-form-item>
+          <el-form-item label="年龄:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Driver_input.Dr_age" />
+          </el-form-item>
+          <el-form-item label="联系电话:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Driver_input.Dr_phone" />
+          </el-form-item>
+          <el-form-item label="车牌号:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Driver_input.Dr_carNumber" />
+          </el-form-item>
+          <el-form-item label="运输工具:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Driver_input.Dr_transport" />
+          </el-form-item>
+        </div>
+        <div v-show="userType=='商店'">
+          <el-form-item label="存入时间:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Shop_input.Sh_storeTime" />
+          </el-form-item>
+          <el-form-item label="销售时间:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Shop_input.Sh_sellTime" />
+          </el-form-item>
+          <el-form-item label="商店名称:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Shop_input.Sh_shopName" />
+          </el-form-item>
+          <el-form-item label="商店位置:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Shop_input.Sh_shopAddress" />
+          </el-form-item>
+          <el-form-item label="商店电话:" style="width: 300px" label-width="120px">
+            <el-input v-model="tracedata.Shop_input.Sh_shopPhone" />
+          </el-form-item>
         </div>
       </el-form>
       <span slot="footer" style="color: gray;" class="dialog-footer">
-        <el-button v-show="userType != 'Customer'" type="primary" plain style="margin-left: 220px;"
-          @click="submittracedata()">Submit</el-button>
+        <el-button v-show="userType != '消费者'" type="primary" plain style="margin-left: 220px;" @click="submittracedata()">提 交</el-button>
       </span>
-      <span v-show="userType == 'Customer'" slot="footer" style="color: gray;" class="dialog-footer">
-        Consumers do not have permission to enter! Please use the traceability function!
+      <span v-show="userType == '消费者'" slot="footer" style="color: gray;" class="dialog-footer">
+        消费者没有权限录入！请使用溯源功能!
       </span>
     </div>
   </div>
@@ -103,41 +99,33 @@ export default {
     return {
       tracedata: {
         traceability_code: '',
-        Mining_company_input: {
-          Mc_diamondName: '',
-          Mc_miner: '',
-          Mc_miningLocation: '',
-          Mc_miningTime: '',
-          Mc_companyName: '',
-          Mc_Txid: '',
-          Mc_Timestamp: ''
+        Farmer_input: {
+          Fa_fruitName: '',
+          Fa_origin: '',
+          Fa_plantTime: '',
+          Fa_pickingTime: '',
+          Fa_farmerName: ''
         },
-        Cutting_company_input: {
-          Cc_diamondName: '',
-          Cc_cutTime: '',
-          Cc_shape: '',
-          Cc_weight: '',
-          Cc_companyName: '',
-          Cc_Txid: '',
-          Cc_Timestamp: ''
+        Factory_input: {
+          Fac_productName: '',
+          Fac_productionbatch: '',
+          Fac_productionTime: '',
+          Fac_factoryName: '',
+          Fac_contactNumber: ''
         },
-        Grading_lab_input: {
-          Gl_diamondName: '',
-          Gl_caratWeight: '',
-          Gl_quality: '',
-          Gl_certificateNo: '',
-          Gl_gradingLabName: '',
-          Gl_Txid: '',
-          Gl_Timestamp: ''
+        Driver_input: {
+          Dr_name: '',
+          Dr_age: '',
+          Dr_phone: '',
+          Dr_carNumber: '',
+          Dr_transport: ''
         },
-        Jewelry_maker_input: {
-          Jm_diamondName: '',
-          Jm_design: '',
-          Jm_manufactureDate: '',
-          Jm_material: '',
-          Jm_jewelerName: '',
-          Jm_Txid: '',
-          Jm_Timestamp: ''
+        Shop_input: {
+          Sh_storeTime: '',
+          Sh_sellTime: '',
+          Sh_shopName: '',
+          Sh_shopAddress: '',
+          Sh_shopPhone: ''
         }
       },
       loading: false
@@ -160,47 +148,48 @@ export default {
       })
       var formData = new FormData()
       formData.append('traceability_code', this.tracedata.traceability_code)
+      // 根据不同的用户给arg1、arg2、arg3..赋值,
       switch (this.userType) {
-        case 'Mining company':
-          formData.append('arg1', this.tracedata.Mining_company_input.Mc_diamondName);
-          formData.append('arg2', this.tracedata.Mining_company_input.Mc_miner);
-          formData.append('arg3', this.tracedata.Mining_company_input.Mc_miningLocation);
-          formData.append('arg4', this.tracedata.Mining_company_input.Mc_miningTime);
-          formData.append('arg5', this.tracedata.Mining_company_input.Mc_companyName);
-          break;
-        case 'Cutting company':
-          formData.append('arg1', this.tracedata.Cutting_company_input.Cc_diamondName);
-          formData.append('arg2', this.tracedata.Cutting_company_input.Cc_cutTime);
-          formData.append('arg3', this.tracedata.Cutting_company_input.Cc_shape);
-          formData.append('arg4', this.tracedata.Cutting_company_input.Cc_weight);
-          formData.append('arg5', this.tracedata.Cutting_company_input.Cc_companyName);
-          break;
-        case 'Grading lab':
-          formData.append('arg1', this.tracedata.Grading_lab_input.Gl_diamondName);
-          formData.append('arg2', this.tracedata.Grading_lab_input.Gl_caratWeight);
-          formData.append('arg3', this.tracedata.Grading_lab_input.Gl_quality);
-          formData.append('arg4', this.tracedata.Grading_lab_input.Gl_certificateNo);
-          formData.append('arg5', this.tracedata.Grading_lab_input.Gl_gradingLabName);
-          break;
-        case 'Jewelry maker':
-          formData.append('arg1', this.tracedata.Jewelry_maker_input.Jm_diamondName);
-          formData.append('arg2', this.tracedata.Jewelry_maker_input.Jm_design);
-          formData.append('arg3', this.tracedata.Jewelry_maker_input.Jm_manufactureDate);
-          formData.append('arg4', this.tracedata.Jewelry_maker_input.Jm_material);
-          formData.append('arg5', this.tracedata.Jewelry_maker_input.Jm_jewelerName);
-          break;
+        case '种植户':
+          formData.append('arg1', this.tracedata.Farmer_input.Fa_fruitName)
+          formData.append('arg2', this.tracedata.Farmer_input.Fa_origin)
+          formData.append('arg3', this.tracedata.Farmer_input.Fa_plantTime)
+          formData.append('arg4', this.tracedata.Farmer_input.Fa_pickingTime)
+          formData.append('arg5', this.tracedata.Farmer_input.Fa_farmerName)
+          break
+        case '工厂':
+          formData.append('arg1', this.tracedata.Factory_input.Fac_productName)
+          formData.append('arg2', this.tracedata.Factory_input.Fac_productionbatch)
+          formData.append('arg3', this.tracedata.Factory_input.Fac_productionTime)
+          formData.append('arg4', this.tracedata.Factory_input.Fac_factoryName)
+          formData.append('arg5', this.tracedata.Factory_input.Fac_contactNumber)
+          break
+        case '运输司机':
+          formData.append('arg1', this.tracedata.Driver_input.Dr_name)
+          formData.append('arg2', this.tracedata.Driver_input.Dr_age)
+          formData.append('arg3', this.tracedata.Driver_input.Dr_phone)
+          formData.append('arg4', this.tracedata.Driver_input.Dr_carNumber)
+          formData.append('arg5', this.tracedata.Driver_input.Dr_transport)
+          break
+        case '商店':
+          formData.append('arg1', this.tracedata.Shop_input.Sh_storeTime)
+          formData.append('arg2', this.tracedata.Shop_input.Sh_sellTime)
+          formData.append('arg3', this.tracedata.Shop_input.Sh_shopName)
+          formData.append('arg4', this.tracedata.Shop_input.Sh_shopAddress)
+          formData.append('arg5', this.tracedata.Shop_input.Sh_shopPhone)
+          break
       }
       uplink(formData).then(res => {
         if (res.code === 200) {
           loading.close()
           this.$message({
-            message: 'Uplink success,TXID:' + res.txid + '\ntraceability_code:' + res.traceability_code,
+            message: '上链成功，交易ID：' + res.txid + '\n溯源码：' + res.traceability_code,
             type: 'success'
           })
         } else {
           loading.close()
           this.$message({
-            message: 'Uplink failed',
+            message: '上链失败',
             type: 'error'
           })
         }
@@ -219,7 +208,6 @@ export default {
   &-container {
     margin: 30px;
   }
-
   &-text {
     font-size: 30px;
     line-height: 46px;
