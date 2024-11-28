@@ -138,8 +138,8 @@ export default {
         value: 'Mining_Company',
         label: 'Mining_Company'
       }, {
-        value: 'Cutting_Company',
-        label: 'Cutting_Company'
+        value: '工厂',
+        label: '工厂'
       }, {
         value: 'Grading_Lab',
         label: 'Grading_Lab'
